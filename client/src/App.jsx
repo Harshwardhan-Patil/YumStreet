@@ -1,10 +1,10 @@
-import '@/App.css'
-import AppRouter from '@/routes/AppRoute'
+import '@/App.css';
+import AppRouter from '@/routes/AppRoute';
 import { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from "react-query";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from '@/redux/store';
 
 const queryClient = new QueryClient();
@@ -23,7 +23,7 @@ function App() {
         </Provider>
       </Suspense>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

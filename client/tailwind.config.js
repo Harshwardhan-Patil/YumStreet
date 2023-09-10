@@ -25,6 +25,7 @@ module.exports = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          gray: "hsl(var(--gray))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -70,6 +71,9 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      margin: {
+        section: '3rem'
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],
