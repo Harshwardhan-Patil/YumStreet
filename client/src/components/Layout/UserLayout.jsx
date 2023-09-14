@@ -25,7 +25,7 @@ function Navbar() {
     const { isAuth, role } = useSelector(state => state.auth);
     return (
         <header>
-            <nav className='relative flex justify-between items-center py-2 px-12 text-xl bg-transparent w-full  z-50'>
+            <nav className='relative flex justify-between items-center py-2 px-12 text-xl bg-transparent w-full'>
                 <div>
                     <Link to={'/'} className='font-bold text-primary'>YumStreet</Link>
                 </div>

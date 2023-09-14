@@ -11,17 +11,17 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <>
-      <Suspense fallback={<div>Loading</div>}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <BrowserRouter>
               <QueryClientProvider client={queryClient}>
+              <Suspense fallback={<div>Loading</div>}>
                 <AppRouter />
+              </Suspense>
               </QueryClientProvider>
             </BrowserRouter>
           </PersistGate>
-        </Provider>
-      </Suspense>
+      </Provider>
     </>
   );
 }

@@ -11,6 +11,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import useScrollTop from '@/hooks/useScrollTop';
 
 
 const background = {
@@ -25,6 +26,8 @@ const background = {
 
 
 function PartnerWithUs() {
+
+    useScrollTop();
 
     return (
         <>

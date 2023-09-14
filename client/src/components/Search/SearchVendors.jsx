@@ -27,7 +27,7 @@ function SearchVendors({ className }) {
                         onBlur={() => setIsFocus(false)}
                     />
                 </div>
-                <div className={`${isFocus ? 'visible opacity-100' : 'invisible opacity-0'}  transition-all lg:h-80 absolute  top-14 left-0 right-0 bg-white overflow-x-hidden overflow-y-scroll rounded-sm`}>
+                <div className={`${isFocus ? 'visible opacity-100' : 'invisible opacity-0'}  transition-all lg:h-80 absolute z-10  top-14 left-0 right-0 bg-white overflow-x-hidden overflow-y-scroll rounded-sm`}>
                     <ul className="px-4">
                         <li className="flex cursor-pointer text-neutral-400 items-center  hover:bg-neutral-100 gap-1 p-2 border-b border-b-neutral-300">
                             <ClockIcon className="mt-1 w-4 fill-neutral-400" />

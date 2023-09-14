@@ -2,8 +2,9 @@
 export const HOME = '/';
 export const ABOUT_US = '/about-us';
 export const CONTACT_US = '/contact-us';
-export const VIEW_VENDOR_MENU = '/:city/:vendorName/menu';
-export const VIEW_VENDOR_REVIEWS = '/:city/:vendorName/reviews';
+export const VIEW_VENDOR_PROFILE = '/:city/:vendorName';
+export const VIEW_VENDOR_MENU = 'menu'; // /:city/:vendorName/menu
+export const VIEW_VENDOR_REVIEWS = 'reviews'; ///:city/:vendorName/reviews
 export const SEARCH_FILTERS = '/:city/:params';
 export const LOGIN = '/login';
 export const LOGOUT = '/logout';

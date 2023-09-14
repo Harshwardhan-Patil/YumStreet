@@ -5,6 +5,7 @@ import { Home, AboutUs, ContactUs, Profile, OrderHistory, PartnerWithUs, VendorE
 import PrivateRoutes from './PrivateRoutes';
 import PublicRoutes from './PublicRoute';
 import { useSelector } from 'react-redux';
+import VendorProfileRoute from './VendorProfileRoute';
 
 function AppRouter() {
   const { isAuth, role } = useSelector((state) => state.auth);
@@ -13,10 +14,6 @@ function AppRouter() {
       <Route exact path={route.HOME} element={<Home />} />
       <Route exact path={route.ABOUT_US} element={<AboutUs />} />
       <Route exact path={route.CONTACT_US} element={<ContactUs />} />
-
-      <Route exact path={route.VIEW_VENDOR_MENU} element={<VendorMenu />} />
-      <Route exact path={route.VIEW_VENDOR_REVIEWS} element={<VendorReviews />} />
-      <Route exact path={route.SEARCH_FILTERS} element={<VendorExplorer />} />
 
       <Route element={<PublicRoutes role={role} />}>
         {/* <Route exact path={route.LOGIN} element={<Login />} />
@@ -33,6 +30,12 @@ function AppRouter() {
         <Route path={route.USER_PROFILE} element={<Profile />} />
         <Route path={route.USER_ORDER_HISTORY} element={<OrderHistory />} />
       </Route> */}
+
+      <Route exact path={route.SEARCH_FILTERS} element={<VendorExplorer />} />
+      <Route exact path={route.VIEW_VENDOR_PROFILE} element={<VendorProfileRoute />}>
+        <Route exact path={route.VIEW_VENDOR_MENU} element={<VendorMenu />} />
+        <Route exact path={route.VIEW_VENDOR_REVIEWS} element={<VendorReviews />} />
+      </Route>
 
     </Routes>
   );

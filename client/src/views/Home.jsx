@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { ChooseLocation, ChooseFood, Delivery } from '@/assets/illustration';
 import WorkingGuide, { IllustrationAndInfo } from '@/components/common/WorkingGuide';
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
+import useScrollTop from '@/hooks/useScrollTop';
 
 const background = {
   backgroundImage: `linear-gradient(0deg, rgba(0,0,0,.4) 0%, rgba(37,40,43,0.2) 100%),
@@ -20,6 +21,8 @@ const background = {
 
 
 function Home() {
+
+  useScrollTop();
 
   return (
     <HomeLayout>
