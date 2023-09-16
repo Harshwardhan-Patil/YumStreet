@@ -6,7 +6,9 @@ import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
 
 function PrivateRoutes({ role }) {
-    const { isAuth, role: userRole } = useSelector((state) => state.auth);
+    // const { isAuth, role: userRole } = useSelector((state) => state.auth);
+    const isAuth = true;
+    const userRole = role;
 
     if (isAuth && userRole === user) {
         return isAuth && userRole === user ? <UserLayout><Outlet /></UserLayout> : <Navigate to='/login' />;

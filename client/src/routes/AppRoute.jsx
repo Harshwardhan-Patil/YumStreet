@@ -1,11 +1,12 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { route, user } from '@/constants/index.js';
-import { Home, AboutUs, ContactUs, Profile, OrderHistory, PartnerWithUs, VendorExplorer, VendorMenu, VendorReviews } from '@/views';
-import PrivateRoutes from './PrivateRoutes';
-import PublicRoutes from './PublicRoute';
+import { Home, AboutUs, ContactUs, OrderHistory, PartnerWithUs, VendorExplorer, VendorMenu, VendorReviews, Reviews, Address } from '@/views';
 import { useSelector } from 'react-redux';
-import VendorProfileRoute from './VendorProfileRoute';
+import { lazy } from 'react';
+
+const PrivateRoutes = lazy(() => import("./PrivateRoutes"));
+const PublicRoutes = lazy(() => import("./PublicRoutes"));
+const VendorProfileRoute = lazy(() => import("./VendorProfileRoute"));
 
 function AppRouter() {
   const { isAuth, role } = useSelector((state) => state.auth);
@@ -21,15 +22,12 @@ function AppRouter() {
         <Route exact path={route.PARTNER_WITH_US} element={<PartnerWithUs />} />
       </Route>
 
-      <Route element={<PrivateRoutes role={user} />}>
-        <Route path={route.USER_PROFILE} element={<Profile />} />
-        <Route path={route.USER_ORDER_HISTORY} element={<OrderHistory />} />
-      </Route>
 
-      {/* <Route element={<PrivateRoutes role={vendor} />}>
-        <Route path={route.USER_PROFILE} element={<Profile />} />
+      <Route path={route.USER_PROFILE} element={<PrivateRoutes role={user} />}>
+        <Route path={route.USER_REVIEWS} element={<Reviews />} />
         <Route path={route.USER_ORDER_HISTORY} element={<OrderHistory />} />
-      </Route> */}
+        <Route path={route.USER_ADDRESS} element={<Address />} />
+      </Route>
 
       <Route exact path={route.SEARCH_FILTERS} element={<VendorExplorer />} />
       <Route exact path={route.VIEW_VENDOR_PROFILE} element={<VendorProfileRoute />}>

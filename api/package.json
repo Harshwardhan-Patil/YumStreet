@@ -1,0 +1,19 @@
+{
+  "name": "yumstreet",
+  "version": "1.0.0",
+  "description": "\"YumStreet\" is a dynamic web platform dedicated to the celebration of street food culture. Our project is all about exploring, reviewing, and savoring the delectable street foods found in the heart of cities. From mouthwatering food stalls to hidden culinary gems, \"YumStreet\" is your passport to the world of street cuisine.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "NODE_ENV=dev nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Harshwardhan Patil And Sourabh Bramhapure",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  }
+}

@@ -16,7 +16,9 @@ export const PARTNER_WITH_US = '/partner-with-us';
 
 //User Routes
 export const USER_PROFILE = '/user/:username';
-export const USER_ORDER_HISTORY = '/user/:username/order-history';
+export const USER_ORDER_HISTORY = 'order-history'; ///user/:username/order-history
+export const USER_REVIEWS = 'reviews'; ///user/:username/reviews
+export const USER_ADDRESS = 'addresses'; ///user/:username/addresses
 export const CHECKOUT_SELECT_ADDRESS = '/checkout/select-address'; //step 1
 export const CHECKOUT_PAYMENT_METHODS = '/checkout/payment-methods'; // step 2
 export const CHECKOUT_REVIEW_ITEM_DELIVERY = '/checkout/review-item-delivery'; //step 3

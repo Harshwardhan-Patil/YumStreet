@@ -12,8 +12,8 @@ function RightLayout({ children }) {
 function LeftLayout({ children, className }) {
 
     return (
-        <div className={cn("py-4 border rounded-l-md border-primary-gray  w-48", className)}>
-            <div className="py-1 px-2 flex flex-col gap-1 w-full">
+        <div className={cn("border bg-neutral-100 rounded-l-md border-primary-gray  w-48", className)}>
+            <div className="flex flex-col gap-1 w-full">
                 {children}
             </div>
         </div>

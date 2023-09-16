@@ -5,6 +5,7 @@ import useScrollTop from '@/hooks/useScrollTop';
 import { sidebarLink } from '@/styles/sidebar';
 import { cn } from '@/lib/utils';
 import Sidebar from '@/components/common/Sidebar';
+import { route } from '@/constants';
 
 
 
@@ -18,13 +19,13 @@ function VendorProfileRoute() {
             <VendorProfile />
             <section className='m-section flex'>
                 <Sidebar.Left>
-                    <Link to={`/${params.city}/${params.vendorName}/menu`}
-                        className={cn(sidebarLink, `${location === 'menu' ? 'bg-neutral-200' : null}`)}
+                    <Link to={`/${params.city}/${params.vendorName}/${route.VIEW_VENDOR_MENU}`}
+                        className={cn(sidebarLink.common, sidebarLink.first, `${location === route.VIEW_VENDOR_MENU ? sidebarLink.active : null}`)}
                     >
                         Menu
                     </Link>
-                    <Link to={`/${params.city}/${params.vendorName}/reviews`}
-                        className={cn(sidebarLink, `${location === 'reviews' ? 'bg-neutral-200' : null}`)}
+                    <Link to={`/${params.city}/${params.vendorName}/${route.VIEW_VENDOR_REVIEWS}`}
+                        className={cn(sidebarLink.common, `${location === route.VIEW_VENDOR_REVIEWS ? sidebarLink.active : null}`)}
                     >
                         Reviews
                     </Link>

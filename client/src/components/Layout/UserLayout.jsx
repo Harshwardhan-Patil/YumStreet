@@ -4,10 +4,10 @@ import { useSelector } from 'react-redux'
 import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
 import VendorIcon from '@/assets/icon/VendorIcon';
-import { ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon, UserCircle2 } from 'lucide-react';
 import SearchVendors from '../Search/SearchVendors';
 import { route } from '@/constants';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 function UserLayout({ children }) {
     return (
@@ -22,7 +22,8 @@ function UserLayout({ children }) {
 }
 
 function Navbar() {
-    const { isAuth, role } = useSelector(state => state.auth);
+    // const { isAuth, role } = useSelector(state => state.auth);
+    const isAuth = true;
     return (
         <header>
             <nav className='relative flex justify-between items-center py-2 px-12 text-xl bg-transparent w-full'>
@@ -44,15 +45,15 @@ function Navbar() {
                         {isAuth && <li>
                             <Popover>
                                 <PopoverTrigger className={popoverTrigger}>
-                                    <UserCircleIcon className='w-8' />
+                                    <UserCircle2 style={{ width: '35px', height: '30px' }} />
                                     Harsh
                                     <ChevronDownIcon className={`duration-300 transition-all  w-6 fill-black`} />
                                 </PopoverTrigger>
                                 <PopoverContent align='end' sideOffset={10} className='w-48 py-2'>
                                     <ul >
-                                        <li className={popContent}>Profile</li>
-                                        <li className={popContent}>Order</li>
-                                        <li className={popContent + 'border-b border-neutral-400'}>Reviews</li>
+                                        <NavLink to={'/user/harshpatil/reviews'} className={popContent}>Profile</NavLink>
+                                        <NavLink to={'/user/harshpatil/order-history'} className={popContent}>Orders</NavLink>
+                                        <NavLink to={'/user/harshpatil/reviews'} className={popContent + 'border-b border-neutral-400'}>Reviews</NavLink>
                                         <li className={`${popContent} rounded-b-sm`}>Logout</li>
                                     </ul>
                                 </PopoverContent>
@@ -71,6 +72,7 @@ const popContent = `
  cursor-pointer
  rounded-t-sm
  hover:bg-neutral-200
+ block
 `
 
 const popoverTrigger = `
