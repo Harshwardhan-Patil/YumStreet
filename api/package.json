@@ -1,19 +1,38 @@
 {
-  "name": "yumstreet",
-  "version": "1.0.0",
-  "description": "\"YumStreet\" is a dynamic web platform dedicated to the celebration of street food culture. Our project is all about exploring, reviewing, and savoring the delectable street foods found in the heart of cities. From mouthwatering food stalls to hidden culinary gems, \"YumStreet\" is your passport to the world of street cuisine.",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "dev": "NODE_ENV=dev nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "Harshwardhan Patil And Sourabh Bramhapure",
-  "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2"
-  }
+   "name": "yumstreet",
+   "version": "1.0.0",
+   "description": "\"YumStreet\" is a dynamic web platform dedicated to the celebration of street food culture. Our project is all about exploring, reviewing, and savoring the delectable street foods found in the heart of cities. From mouthwatering food stalls to hidden culinary gems, \"YumStreet\" is your passport to the world of street cuisine.",
+   "type": "module",
+   "main": "index.js",
+   "scripts": {
+      "dev": "NODE_ENV=development nodemon index.js",
+      "start": "NODE_ENV=production node index.js",
+      "lint": "eslint",
+      "lint:fix": "eslint . --fix",
+      "format": "prettier --write",
+      "test": "echo \"Error: no test specified\" && exit 1"
+   },
+   "keywords": [],
+   "author": "Harshwardhan Patil And Sourabh Bramhapure",
+   "license": "ISC",
+   "dependencies": {
+      "bcrypt": "^5.1.1",
+      "cors": "^2.8.5",
+      "dotenv": "^16.3.1",
+      "express": "^4.18.2",
+      "express-validator": "^7.0.1",
+      "jsonwebtoken": "^9.0.2",
+      "multer": "^1.4.5-lts.1",
+      "pg": "^8.11.3",
+      "pg-hstore": "^2.3.4",
+      "sequelize": "^6.33.0"
+   },
+   "devDependencies": {
+      "eslint": "^8.50.0",
+      "eslint-config-airbnb-base": "^15.0.0",
+      "eslint-config-prettier": "^9.0.0",
+      "eslint-plugin-import": "^2.28.1",
+      "eslint-plugin-prettier": "^5.0.0",
+      "prettier": "^3.0.3"
+   }
 }
