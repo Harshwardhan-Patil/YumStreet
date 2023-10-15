@@ -15,3 +15,6 @@ export { default as vendorMenuItemRouter } from './vendors/menuItem.vendors.js';
 export { default as vendorOrderRouter } from './vendors/order.vendors.js';
 export { default as vendorProfileRouter } from './vendors/profile.vendors.js';
 export { default as vendorReviewsRouter } from './vendors/review.vendors.js';
+
+//* Public
+export { default as categoriesRouter } from './public/categories.public.js';

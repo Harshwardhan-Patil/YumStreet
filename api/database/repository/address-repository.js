@@ -14,6 +14,7 @@ class AddressRepository {
         address,
         this.model
       );
+      console.log(validAddressData);
       const createdAddress = await this.model.create(validAddressData);
       return createdAddress;
     } catch (error) {

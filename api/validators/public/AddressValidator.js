@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-class UserAddressValidator {
+class AddressValidator {
   static CreateAddress() {
     return [
       body('address').trim().notEmpty().withMessage('Address is required'),
@@ -99,4 +99,4 @@ class UserAddressValidator {
   }
 }
 
-export default UserAddressValidator;
+export default AddressValidator;

@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../connection.js';
 import User from './User.js';
 import Address from './Address.js';
-
+// TODO: Add license column
 class Vendor extends Model {}
 
 Vendor.init(
@@ -28,6 +28,10 @@ Vendor.init(
     },
     closingTime: {
       type: DataTypes.TIME,
+    },
+    license: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     vendorImages: {
       type: DataTypes.JSONB,

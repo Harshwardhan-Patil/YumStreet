@@ -16,6 +16,7 @@ import {
   vendorOrderRouter,
   vendorProfileRouter,
   vendorReviewsRouter,
+  categoriesRouter,
 } from './routes/index.js';
 
 const initializeApp = (app) => {
@@ -28,19 +29,21 @@ const initializeApp = (app) => {
   app.use(cors());
 
   //* routes*/
+  app.use('/api/v1/category', categoriesRouter);
+
   app.use('/api/v1/users/', userAuthRouter);
-  app.use('/api/v1/users/:userId/address', userAddressRouter);
-  app.use('/api/v1/users/:userId/cart', userCartRouter);
-  app.use('/api/v1/users/:userId/orders', userOrderRouter);
-  app.use('/api/v1/users/:userId/profile', userProfileRouter);
-  app.use('/api/v1/users/:userId/reviews', userReviewsRouter);
+  app.use('/api/v1/users/address', userAddressRouter);
+  app.use('/api/v1/users/cart', userCartRouter);
+  app.use('/api/v1/users/orders', userOrderRouter);
+  app.use('/api/v1/users/profile', userProfileRouter);
+  app.use('/api/v1/users/reviews', userReviewsRouter);
 
   app.use('/api/v1/vendors/', vendorAuthRouter);
-  app.use('/api/v1/vendors/:vendorId/address', vendorAddressRouter);
-  app.use('/api/v1/vendors/:vendorId/menu', vendorMenuItemRouter);
-  app.use('/api/v1/vendors/:vendorId/orders', vendorOrderRouter);
-  app.use('/api/v1/vendors/:vendorId/profile', vendorProfileRouter);
-  app.use('/api/v1/vendors/:vendorId/reviews', vendorReviewsRouter);
+  app.use('/api/v1/vendors/address', vendorAddressRouter);
+  app.use('/api/v1/vendors/menu', vendorMenuItemRouter);
+  app.use('/api/v1/vendors/orders', vendorOrderRouter);
+  app.use('/api/v1/vendors/profile', vendorProfileRouter);
+  app.use('/api/v1/vendors/reviews', vendorReviewsRouter);
 
   //* Error Handler
   app.use((err, req, res, next) => {

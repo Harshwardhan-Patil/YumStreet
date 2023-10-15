@@ -3,23 +3,26 @@ import ApiError from '../../utils/ApiErrors.js';
 import Filter from '../../utils/Filter.js';
 import { CartItem } from '../models/index.js';
 
-class CartItemItemRepository {
+class CartItemRepository {
   constructor() {
     this.model = CartItem;
   }
 
-  async CreateCartItem({ quantity, cartId, menuItemId }) {
+  async CreateCartItem(cartItemData, cart, menuItem) {
     try {
-      const cartItem = await this.model.create({
-        quantity,
-        cartId,
-        menuItemId,
-      });
+      const validCartItemData = Filter.GetValidAttributes(
+        cartItemData,
+        this.model
+      );
+      const cartItem = await this.model.create(validCartItemData);
+      cartItem.setCart(cart);
+      cartItem.setMenuItem(menuItem);
       return cartItem;
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,
-        'Unable to create cart item'
+        'Unable to create cart item',
+        error
       );
     }
   }
@@ -31,7 +34,8 @@ class CartItemItemRepository {
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,
-        'Unable to find cart item'
+        'Unable to find cart item',
+        error
       );
     }
   }
@@ -43,7 +47,8 @@ class CartItemItemRepository {
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,
-        'Unable to find cart item'
+        'Unable to find cart item',
+        error
       );
     }
   }
@@ -54,12 +59,17 @@ class CartItemItemRepository {
         await Filter.GetValidAttributes(cartItemDataToUpdate);
       const cartItem = await this.model.update(validCartItemDataToUpdate, {
         where: { id },
+        returning: true,
       });
-      return cartItem;
+      if (cartItem[0] <= 0) {
+        throw new ApiError('cart item not found');
+      }
+      return cartItem[1];
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,
-        'Unable to update cart item'
+        'Unable to update cart item',
+        error
       );
     }
   }
@@ -71,10 +81,11 @@ class CartItemItemRepository {
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,
-        'Unable to delete Cart item'
+        'Unable to delete Cart item',
+        error
       );
     }
   }
 }
 
-export default CartItemItemRepository;
+export default CartItemRepository;

@@ -8,39 +8,40 @@ class MenuItemRepository {
     this.model = MenuItem;
   }
 
-  async CreateMenuItem({
-    name,
-    description = '',
-    isVeg,
-    price,
-    image,
-    vendorId,
-    categoryId,
-  }) {
+  async CreateMenuItem(menuData, vendor, category) {
     try {
-      const menuItem = await this.model.create({
-        name,
-        description,
-        isVeg,
-        price,
-        image,
-        vendorId,
-        categoryId,
-      });
+      const validVendorData = await Filter.GetValidAttributes(
+        menuData,
+        this.model
+      );
+      const menuItem = await this.model.create(validVendorData);
+      await menuItem.setVendor(vendor);
+      await menuItem.setCategory(category);
       return menuItem;
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,
-        'Unable to create menu item'
+        'Unable to create vendor',
+        error
       );
     }
   }
 
-  async FindMenuItemById(id, attributes = []) {
+  async FindMenuItemById(id) {
     try {
-      const menuItem = await this.model.findByPk(id, {
-        attributes,
-      });
+      const menuItem = await this.model.findByPk(id);
+      return menuItem;
+    } catch (error) {
+      throw new ApiError(
+        STATUS_CODES.INTERNAL_ERROR,
+        'Unable to find menu item'
+      );
+    }
+  }
+
+  async FindMenuItemByName(name, vendorId) {
+    try {
+      const menuItem = await this.model.findOne({ where: { name, vendorId } });
       return menuItem;
     } catch (error) {
       throw new ApiError(
@@ -52,12 +53,17 @@ class MenuItemRepository {
 
   async FindMenuItemsByVendorId(vendorId) {
     try {
-      const menuItems = await this.model.findAll({ where: { vendorId } });
+      const menuItems = await this.model.findAll({
+        where: { vendorId },
+        order: [['Category', 'name']],
+        include: ['Category'],
+      });
       return menuItems;
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,
-        'Unable to find menu item'
+        'Unable to find menu item',
+        error
       );
     }
   }
@@ -76,12 +82,18 @@ class MenuItemRepository {
 
   async UpdateMenuItem(id, menuItemDataToUpdate) {
     try {
-      const validMenuItemDataToUpdate =
-        await Filter.GetValidAttributes(menuItemDataToUpdate);
+      const validMenuItemDataToUpdate = await Filter.GetValidAttributes(
+        menuItemDataToUpdate,
+        this.model
+      );
       const menuItem = await this.model.update(validMenuItemDataToUpdate, {
         where: { id },
+        returning: true,
       });
-      return menuItem;
+      if (menuItem[0] <= 0) {
+        throw new ApiError(STATUS_CODES.NOT_FOUND, 'Menu item not found');
+      }
+      return menuItem[1];
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,

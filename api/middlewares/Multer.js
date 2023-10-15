@@ -39,7 +39,7 @@ class Multer {
     if (!FILE_EXTENSIONS.includes(this.GetFileExtension(file))) {
       cb(
         new ApiError(
-          STATUS_CODES.UNPROCESSABLE_ENTITY,
+          415,
           'Invalid file type. Only .png, .jpg, and .jpeg files are allowed'
         )
       );
@@ -53,6 +53,7 @@ const multerUpload = new Multer();
 const upload = multer({
   storage: multerUpload.Storage(),
   fileFilter: multerUpload.FileFilter,
+  // limits: { fileSize: 1024 * 1024 },
 });
 
 export default upload;

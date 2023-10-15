@@ -48,6 +48,19 @@ class Helper {
       );
     }
   }
+
+  static async GetPaginationOptions(page, limit, Model, query = {}) {
+    const startIndex = page > 0 ? (page - 1) * limit : 0;
+    const endIndex = page * limit;
+
+    const length = await Model.count({ ...query });
+    const pagination = {
+      currentPage: page,
+      hasNextPage: length - endIndex > 0,
+      lastVisiblePage: Math.ceil(length / limit),
+    };
+    return { pagination, offset: startIndex, limit: endIndex };
+  }
 }
 
 export default Helper;

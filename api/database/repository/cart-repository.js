@@ -8,11 +8,10 @@ class CartRepository {
     this.model = Cart;
   }
 
-  async CreateCart({ userId }) {
+  async CreateCart(user) {
     try {
-      const cart = await this.model.create({
-        userId,
-      });
+      const cart = await this.model.create();
+      cart.setUser(user);
       return cart;
     } catch (error) {
       throw new ApiError(STATUS_CODES.INTERNAL_ERROR, 'Unable to create Cart');
@@ -22,6 +21,15 @@ class CartRepository {
   async FindCartById(id) {
     try {
       const cart = await this.model.findByPk(id);
+      return cart;
+    } catch (error) {
+      throw new ApiError(STATUS_CODES.INTERNAL_ERROR, 'Unable to find Cart');
+    }
+  }
+
+  async FindCartByUserId(userId) {
+    try {
+      const cart = await this.model.findOne({ where: { userId } });
       return cart;
     } catch (error) {
       throw new ApiError(STATUS_CODES.INTERNAL_ERROR, 'Unable to find Cart');

@@ -1,8 +1,9 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../connection.js';
-import { AvailableOrderStatuses } from '../../constants.js';
+import { AvailableOrderStatuses, OrderStatusEnum } from '../../constants.js';
 import User from './User.js';
 import Vendor from './Vendor.js';
+import Address from './Address.js';
 
 class Order extends Model {}
 
@@ -16,6 +17,7 @@ Order.init(
     status: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: OrderStatusEnum.PENDING,
       values: AvailableOrderStatuses,
     },
 
@@ -65,5 +67,8 @@ Order.belongsTo(Vendor, {
     allowNull: false,
   },
 });
+
+Order.belongsTo(Address, { foreignKey: 'addressId' });
+Address.hasOne(Order, { foreignKey: 'addressId' });
 
 export default Order;

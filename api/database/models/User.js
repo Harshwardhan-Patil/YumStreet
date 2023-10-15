@@ -59,6 +59,6 @@ User.init(
 );
 
 Address.hasOne(User);
-User.belongsTo(Address);
+User.belongsTo(Address, { onDelete: 'CASCADE' });
 
 export default User;

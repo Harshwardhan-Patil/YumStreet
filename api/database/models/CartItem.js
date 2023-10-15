@@ -16,6 +16,11 @@ CartItem.init(
       type: DataTypes.INTEGER,
       defaultValue: 1,
       allowNull: false,
+      validate: {
+        min: {
+          arg: 1,
+        },
+      },
     },
   },
   { sequelize, modelName: 'CartItem' }
@@ -25,6 +30,7 @@ Cart.hasMany(CartItem, {
   foreignKey: {
     name: 'cartId',
     allowNull: false,
+    onDelete: 'CASCADE',
   },
 });
 CartItem.belongsTo(Cart, {
@@ -38,6 +44,7 @@ MenuItem.hasMany(CartItem, {
   foreignKey: {
     name: 'menuItemId',
     allowNull: false,
+    onDelete: 'CASCADE',
   },
 });
 CartItem.belongsTo(MenuItem, {

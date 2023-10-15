@@ -34,6 +34,7 @@ User.hasMany(Review, {
   foreignKey: {
     name: 'userId',
     allowNull: false,
+    onDelete: 'CASCADE',
   },
 });
 Review.belongsTo(User, {
@@ -47,6 +48,7 @@ Vendor.hasMany(Review, {
   foreignKey: {
     name: 'vendorId',
     allowNull: false,
+    onDelete: 'CASCADE',
   },
 });
 Review.belongsTo(Vendor, {

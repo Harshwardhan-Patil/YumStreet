@@ -27,9 +27,10 @@ MenuItem.init(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
-        min: {
-          args: 0,
-          msg: 'price must be positive number',
+        isPositiveOrZero: (value) => {
+          if (parseFloat(value) < 0) {
+            throw new Error('Price must be a positive number or zero');
+          }
         },
       },
     },
@@ -48,6 +49,7 @@ Vendor.hasMany(MenuItem, {
   foreignKey: {
     name: 'vendorId',
     allowNull: false,
+    onDelete: 'CASCADE',
   },
 });
 MenuItem.belongsTo(Vendor, {
@@ -63,6 +65,11 @@ Category.hasMany(MenuItem, {
     allowNull: false,
   },
 });
-MenuItem.belongsTo(Category);
+MenuItem.belongsTo(Category, {
+  foreignKey: {
+    name: 'categoryId',
+    allowNull: false,
+  },
+});
 
 export default MenuItem;

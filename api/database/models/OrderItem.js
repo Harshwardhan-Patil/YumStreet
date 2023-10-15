@@ -35,6 +35,7 @@ Order.hasMany(OrderItem, {
   foreignKey: {
     name: 'orderId',
     allowNull: false,
+    onDelete: 'CASCADE',
   },
 });
 OrderItem.belongsTo(Order, {

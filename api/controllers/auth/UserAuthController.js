@@ -15,7 +15,10 @@ class UserAuthController {
     try {
       const isUserExist = await this.db.FindUserByEmail(email);
       if (isUserExist) {
-        throw new ApiError(409, 'User with email or username already exists');
+        throw new ApiError(
+          STATUS_CODES.CONFLICT,
+          'User with email or username already exists'
+        );
       }
 
       const hashedPassword = await Password.hash(password);
