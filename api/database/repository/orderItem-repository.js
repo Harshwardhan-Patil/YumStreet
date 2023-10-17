@@ -20,7 +20,8 @@ class OrderItemRepository {
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,
-        'Unable to create order item'
+        'Unable to create order item',
+        error
       );
     }
   }
@@ -54,12 +55,17 @@ class OrderItemRepository {
   async UpdateOrderItem(id, orderItemDataToUpdate) {
     try {
       const validOrderItemDataToUpdate = await Filter.GetValidAttributes(
-        orderItemDataToUpdate
+        orderItemDataToUpdate,
+        this.model
       );
       const orderItem = await this.model.update(validOrderItemDataToUpdate, {
         where: { id },
+        returning: true,
       });
-      return orderItem;
+      if (orderItem[0] <= 0) {
+        throw new ApiError('cart item not found');
+      }
+      return orderItem[1];
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,

@@ -10,10 +10,11 @@ class CartItemRepository {
 
   async CreateCartItem(cartItemData, cart, menuItem) {
     try {
-      const validCartItemData = Filter.GetValidAttributes(
+      const validCartItemData = await Filter.GetValidAttributes(
         cartItemData,
         this.model
       );
+      console.log(validCartItemData);
       const cartItem = await this.model.create(validCartItemData);
       cartItem.setCart(cart);
       cartItem.setMenuItem(menuItem);
@@ -53,10 +54,41 @@ class CartItemRepository {
     }
   }
 
+  async FindCartItemsByCartIdWithInclude(cartId) {
+    try {
+      const cartItems = await this.model.findAll({
+        where: { cartId },
+        include: ['Cart', 'MenuItem'],
+      });
+      return cartItems;
+    } catch (error) {
+      throw new ApiError(
+        STATUS_CODES.INTERNAL_ERROR,
+        'Unable to find cart item',
+        error
+      );
+    }
+  }
+
+  async FindCartItemByMenuItemId(menuItemId) {
+    try {
+      const cartItem = await this.model.findOne({ where: { menuItemId } });
+      return cartItem;
+    } catch (error) {
+      throw new ApiError(
+        STATUS_CODES.INTERNAL_ERROR,
+        'Unable to find cart item',
+        error
+      );
+    }
+  }
+
   async UpdateCartItem(id, cartItemDataToUpdate) {
     try {
-      const validCartItemDataToUpdate =
-        await Filter.GetValidAttributes(cartItemDataToUpdate);
+      const validCartItemDataToUpdate = await Filter.GetValidAttributes(
+        cartItemDataToUpdate,
+        this.model
+      );
       const cartItem = await this.model.update(validCartItemDataToUpdate, {
         where: { id },
         returning: true,
@@ -77,7 +109,7 @@ class CartItemRepository {
   async DeleteCartItemById(id) {
     try {
       await this.model.destroy({ where: { id } });
-      return 'Order deleted successfully';
+      return 'Cart item deleted successfully';
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,

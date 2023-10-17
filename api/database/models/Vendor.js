@@ -41,11 +41,11 @@ Vendor.init(
   { sequelize, modelName: 'Vendor' }
 );
 
-User.hasOne(Vendor);
+User.hasOne(Vendor, { onDelete: 'CASCADE' });
 Vendor.belongsTo(User);
 
 Address.hasOne(User);
-Vendor.belongsTo(Address);
+Vendor.belongsTo(Address, { onDelete: 'CASCADE' });
 
 Vendor.addHook('beforeDestroy', async (vendor) => {
   const address = await vendor.getAddress();

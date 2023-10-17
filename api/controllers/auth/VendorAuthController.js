@@ -30,6 +30,7 @@ class VendorAuthController {
 
       const address = await this.addressDb.CreateAddress(req.body);
       const { images, license } = req.files;
+      console.log(req.files);
       const vendorImages = images.map((file) => file.path);
       const data = { vendorImages, ...req.body, license: license[0].path };
       const vendor = await this.db.CreateVendor(data, user, address);

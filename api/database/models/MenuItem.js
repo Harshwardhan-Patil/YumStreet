@@ -28,7 +28,8 @@ MenuItem.init(
       allowNull: false,
       validate: {
         isPositiveOrZero: (value) => {
-          if (parseFloat(value) < 0) {
+          const priceValue = parseFloat(value);
+          if (Number.isNaN(priceValue) || priceValue < 0) {
             throw new Error('Price must be a positive number or zero');
           }
         },
@@ -49,8 +50,8 @@ Vendor.hasMany(MenuItem, {
   foreignKey: {
     name: 'vendorId',
     allowNull: false,
-    onDelete: 'CASCADE',
   },
+  onDelete: 'CASCADE',
 });
 MenuItem.belongsTo(Vendor, {
   foreignKey: {

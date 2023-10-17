@@ -1,7 +1,7 @@
 import { STATUS_CODES } from '../../constants.js';
 import ApiError from '../../utils/ApiErrors.js';
 import Filter from '../../utils/Filter.js';
-import { Review } from '../models/index.js';
+import { MenuItem, Review, User, Vendor } from '../models/index.js';
 
 class ReviewRepository {
   constructor() {
@@ -26,11 +26,9 @@ class ReviewRepository {
     }
   }
 
-  async FindReviewById(id, attributes = []) {
+  async FindReviewById(id) {
     try {
-      const review = await this.model.findByPk(id, {
-        attributes,
-      });
+      const review = await this.model.findByPk(id);
       return review;
     } catch (error) {
       throw new ApiError(STATUS_CODES.INTERNAL_ERROR, 'Unable to find review');
@@ -39,7 +37,10 @@ class ReviewRepository {
 
   async FindReviewsByVendorId(vendorId) {
     try {
-      const reviews = await this.model.findAll({ where: { vendorId } });
+      const reviews = await this.model.findAll({
+        where: { vendorId },
+        include: [User, MenuItem],
+      });
       return reviews;
     } catch (error) {
       throw new ApiError(STATUS_CODES.INTERNAL_ERROR, 'Unable to find review');
@@ -48,10 +49,17 @@ class ReviewRepository {
 
   async FindReviewsByUserId(userId) {
     try {
-      const reviews = await this.model.findAll({ where: { userId } });
+      const reviews = await this.model.findAll({
+        where: { userId },
+        include: [Vendor, MenuItem],
+      });
       return reviews;
     } catch (error) {
-      throw new ApiError(STATUS_CODES.INTERNAL_ERROR, 'Unable to find review');
+      throw new ApiError(
+        STATUS_CODES.INTERNAL_ERROR,
+        'Unable to find review',
+        error
+      );
     }
   }
 
@@ -64,14 +72,29 @@ class ReviewRepository {
     }
   }
 
+  async FindReviewByCondition(condition = {}) {
+    try {
+      const reviews = await this.model.findOne({ where: condition });
+      return reviews;
+    } catch (error) {
+      throw new ApiError(STATUS_CODES.INTERNAL_ERROR, 'Unable to find review');
+    }
+  }
+
   async UpdateReview(id, reviewDataToUpdate) {
     try {
-      const validReviewDataToUpdate =
-        await Filter.GetValidAttributes(reviewDataToUpdate);
+      const validReviewDataToUpdate = await Filter.GetValidAttributes(
+        reviewDataToUpdate,
+        this.model
+      );
       const review = await this.model.update(validReviewDataToUpdate, {
         where: { id },
+        returning: true,
       });
-      return review;
+      if (review[0] <= 0) {
+        throw new ApiError('cart item not found');
+      }
+      return review[1];
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,

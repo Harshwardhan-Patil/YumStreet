@@ -1,15 +1,15 @@
-import { body } from 'express-validator';
+import { body, checkExact } from 'express-validator';
 
 class UserCartValidator {
   static CreateCart() {
-    return [
+    return checkExact([
       body('menuItemId').trim().notEmpty().withMessage('Provide menu item id'),
       body('quantity')
         .trim()
         .notEmpty()
         .withMessage('provide quantity')
         .toInt(),
-    ];
+    ]);
   }
 
   static UpdateCartItem() {
@@ -29,13 +29,13 @@ class UserCartValidator {
   }
 
   static ClearUserCart() {
-    return [
+    return checkExact([
       body('cartId')
         .optional()
         .trim()
         .notEmpty()
         .withMessage('Provide cart id'),
-    ];
+    ]);
   }
 }
 

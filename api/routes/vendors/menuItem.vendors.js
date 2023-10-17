@@ -28,6 +28,9 @@ router
     VendorMenuItems.CreateVendorMenuItem.bind(VendorMenuItems)
   );
 
+// Todo: implement search controller
+router.get('/items/search');
+
 router
   .use(Authenticator.VerifyToken)
   .route('/items/:itemId')

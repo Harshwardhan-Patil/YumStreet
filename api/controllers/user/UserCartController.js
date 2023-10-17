@@ -22,17 +22,19 @@ class UserCartController {
       if (!req.query.cartId) {
         cart = await this.cart.FindCartByUserId(req.user.id);
       }
-
+      if (!cart) {
+        throw new ApiError(STATUS_CODES.NOT_FOUND, 'User cart not found');
+      }
       const cartItems = await this.cartItem.FindCartItemByCartId(
         req.query.cartId || cart.dataValues.id
       );
-      console.log(cartItems);
+
       return res
         .status(STATUS_CODES.OK)
         .json(
           new ApiResponse(
             STATUS_CODES.OK,
-            { ...cartItems.dataValues },
+            [...cartItems],
             'User cart fetched successfully'
           )
         );
@@ -43,6 +45,15 @@ class UserCartController {
 
   async CreateUserCart(req, res, next) {
     try {
+      const isCartItemExist = await this.cartItem.FindCartItemByMenuItemId(
+        req.body.menuItemId
+      );
+      if (isCartItemExist) {
+        throw new ApiError(
+          STATUS_CODES.BAD_REQUEST,
+          'Cart item is already in the cart'
+        );
+      }
       const menuItem = await this.menuItem.FindMenuItemById(
         req.body.menuItemId
       );
@@ -58,16 +69,13 @@ class UserCartController {
 
       let cart;
       cart = await this.cart.FindCartByUserId(req.user.id);
+      console.log(cart);
       if (!cart) {
         cart = await this.cart.CreateCart(user);
       }
-
-      const cartItem = await this.cartItem.CreateCartItem(
-        req.body,
-        cart,
-        menuItem
-      );
-      console.log(cartItem);
+      console.log(cart);
+      const body = { ...req.body, cartId: cart.dataValues.id };
+      const cartItem = await this.cartItem.CreateCartItem(body, cart, menuItem);
       return res
         .status(STATUS_CODES.OK)
         .json(
@@ -114,7 +122,7 @@ class UserCartController {
         .json(
           new ApiResponse(
             STATUS_CODES.OK,
-            { ...cartItem },
+            { cartItem },
             'User cart item deleted'
           )
         );
@@ -129,9 +137,7 @@ class UserCartController {
 
       return res
         .status(STATUS_CODES.OK)
-        .json(
-          new ApiResponse(STATUS_CODES.OK, { ...cart }, 'User cart cleared')
-        );
+        .json(new ApiResponse(STATUS_CODES.OK, { cart }, 'User cart cleared'));
     } catch (error) {
       return next(error);
     }

@@ -15,7 +15,10 @@ Cart.init(
   { sequelize, modelName: 'Cart', createdAt: true, updatedAt: true }
 );
 
-User.hasMany(Cart, { foreignKey: { name: 'userId', allowNull: 'false' } });
+User.hasMany(Cart, {
+  foreignKey: { name: 'userId', allowNull: 'false' },
+  onDelete: 'CASCADE',
+});
 Cart.belongsTo(User, { foreignKey: { name: 'userId', allowNull: 'false' } });
 
 export default Cart;

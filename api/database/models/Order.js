@@ -18,7 +18,13 @@ Order.init(
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: OrderStatusEnum.PENDING,
-      values: AvailableOrderStatuses,
+      validate: {
+        isValidStatus: (value) => {
+          if (!AvailableOrderStatuses.includes(value)) {
+            throw new Error(`Invalid OrderStatus value: ${value}`);
+          }
+        },
+      },
     },
 
     orderDate: {
@@ -35,6 +41,10 @@ Order.init(
     cancelledAt: {
       type: DataTypes.DATE,
     },
+    paymentId: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
     isPaymentDone: {
       type: DataTypes.BOOLEAN,
     },
@@ -47,6 +57,7 @@ User.hasMany(Order, {
     name: 'userId',
     allowNull: false,
   },
+  onDelete: 'CASCADE',
 });
 Order.belongsTo(User, {
   foreignKey: {
@@ -60,6 +71,7 @@ Vendor.hasMany(Order, {
     name: 'vendorId',
     allowNull: false,
   },
+  onDelete: 'CASCADE',
 });
 Order.belongsTo(Vendor, {
   foreignKey: {

@@ -28,7 +28,6 @@ class VendorMenuItemsValidator {
       body('price')
         .notEmpty()
         .withMessage('Price is required')
-        .isFloat()
         .toFloat()
         .withMessage('Invalid price value'),
       body('categoryId')

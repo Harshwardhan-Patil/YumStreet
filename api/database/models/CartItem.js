@@ -17,8 +17,12 @@ CartItem.init(
       defaultValue: 1,
       allowNull: false,
       validate: {
-        min: {
-          arg: 1,
+        isValidQuantity: (value) => {
+          if (parseInt(value, 10) <= 0) {
+            throw new Error(
+              'Price must be a positive number and greater than zero'
+            );
+          }
         },
       },
     },
@@ -49,7 +53,7 @@ MenuItem.hasMany(CartItem, {
 });
 CartItem.belongsTo(MenuItem, {
   foreignKey: {
-    name: 'cardId',
+    name: 'menuItemId',
     allowNull: false,
   },
 });

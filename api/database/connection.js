@@ -25,7 +25,7 @@ class DatabaseManager {
 
   async Synchronization() {
     try {
-      await this.sequelize.sync();
+      await this.sequelize.sync({ force: false });
       console.log('Database synchronized');
     } catch (error) {
       console.error('Error synchronizing database:', error);

@@ -18,8 +18,8 @@ Review.init(
       allowNull: false,
       validate: {
         isFloat: {
-          args: { min: 0, max: 5 },
-          msg: 'Rating must be between 0 and 5.',
+          args: { min: 1, max: 5 },
+          msg: 'Rating must be between 1 and 5.',
         },
       },
     },
@@ -34,8 +34,8 @@ User.hasMany(Review, {
   foreignKey: {
     name: 'userId',
     allowNull: false,
-    onDelete: 'CASCADE',
   },
+  onDelete: 'CASCADE',
 });
 Review.belongsTo(User, {
   foreignKey: {
@@ -48,8 +48,8 @@ Vendor.hasMany(Review, {
   foreignKey: {
     name: 'vendorId',
     allowNull: false,
-    onDelete: 'CASCADE',
   },
+  onDelete: 'CASCADE',
 });
 Review.belongsTo(Vendor, {
   foreignKey: {

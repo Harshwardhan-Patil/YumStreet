@@ -34,16 +34,16 @@ const initializeApp = (app) => {
   app.use('/api/v1/users/', userAuthRouter);
   app.use('/api/v1/users/address', userAddressRouter);
   app.use('/api/v1/users/cart', userCartRouter);
-  app.use('/api/v1/users/orders', userOrderRouter);
+  app.use('/api/v1/users/order', userOrderRouter);
   app.use('/api/v1/users/profile', userProfileRouter);
-  app.use('/api/v1/users/reviews', userReviewsRouter);
+  app.use('/api/v1/users/review', userReviewsRouter);
 
   app.use('/api/v1/vendors/', vendorAuthRouter);
   app.use('/api/v1/vendors/address', vendorAddressRouter);
   app.use('/api/v1/vendors/menu', vendorMenuItemRouter);
   app.use('/api/v1/vendors/orders', vendorOrderRouter);
   app.use('/api/v1/vendors/profile', vendorProfileRouter);
-  app.use('/api/v1/vendors/reviews', vendorReviewsRouter);
+  app.use('/api/v1/vendors/review', vendorReviewsRouter);
 
   //* Error Handler
   app.use((err, req, res, next) => {
