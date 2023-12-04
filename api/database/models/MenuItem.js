@@ -23,6 +23,10 @@ MenuItem.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    inStock: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,

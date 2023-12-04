@@ -6,6 +6,7 @@ import {
 } from '../../database/index.js';
 import ApiError from '../../utils/ApiErrors.js';
 import ApiResponse from '../../utils/ApiResponse.js';
+import Helper from '../../utils/Helper.js';
 
 class VendorProfileController {
   constructor() {
@@ -24,21 +25,28 @@ class VendorProfileController {
       }
 
       const vendor = isAddress
-        ? await this.db.FindVendorByIdWithModel(vendorId, ['Address'])
+        ? await this.db.FindVendorByIdWithModel(vendorId, [
+            'Address',
+            'Reviews',
+          ])
         : await this.db.FindVendorById(vendorId);
+
       if (!vendor) {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'Vendor not found');
       }
-
-      return res
-        .status(200)
-        .json(
-          new ApiResponse(
-            200,
-            { ...vendor.dataValues },
-            'Vendor find successfully'
-          )
-        );
+      const { Reviews, license, ...vendorData } = vendor.dataValues;
+      const averageRating = Helper.GetAverageRating(Reviews);
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          {
+            ...vendorData,
+            reviewCount: Reviews.length,
+            averageRating,
+          },
+          'Vendor find successfully'
+        )
+      );
     } catch (error) {
       return next(error);
     }
@@ -50,19 +58,14 @@ class VendorProfileController {
       if (!vendorId) {
         throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Provide vendorId');
       }
-
-      if (req.files.images && req.files.images.length < 5) {
-        throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Provide 5 images');
-      }
-      const images = req.files.images
-        ? req.files.images.map((file) => file.path)
-        : [];
-
+      let images = '';
+      images =
+        req.files && req.files.images
+          ? req.files.images.map((file) => file.path)
+          : [];
       const body =
         images.length > 0 ? { vendorImages: images, ...req.body } : req.body;
-
       const vendor = await this.db.UpdateVendor(vendorId, req.user.id, body);
-
       return res
         .status(200)
         .json(

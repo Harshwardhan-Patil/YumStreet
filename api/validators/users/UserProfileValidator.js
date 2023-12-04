@@ -3,12 +3,12 @@ import { body } from 'express-validator';
 class UserProfileValidator {
   static UpdateProfile() {
     return [
-      body('firstName')
+      body('firstname')
         .optional()
         .trim()
         .notEmpty()
         .withMessage('Firstname is required'),
-      body('lastName')
+      body('lastname')
         .optional()
         .trim()
         .notEmpty()

@@ -10,11 +10,12 @@ class CategoryRepository {
     this.model = Category;
   }
 
-  async CreateCategory({ name, description }) {
+  async CreateCategory({ name, description, image }) {
     try {
       const category = await this.model.create({
         name,
         description,
+        image,
       });
       return category;
     } catch (error) {
@@ -57,9 +58,9 @@ class CategoryRepository {
   async FindAllCategories(modelOffset, modelLimit) {
     try {
       const { pagination, offset, limit } = await Helper.GetPaginationOptions(
+        this.model,
         modelOffset,
-        modelLimit,
-        this.model
+        modelLimit
       );
       const categories = await this.model.findAndCountAll({ offset, limit });
       return { pagination, ...categories };

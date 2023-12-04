@@ -3,12 +3,10 @@ import { body, checkExact } from 'express-validator';
 class UserOrderValidator {
   static CreateOrder() {
     return checkExact([
-      body('address')
+      body('addressId')
         .optional()
         .notEmpty()
-        .withMessage('Provide menu item id')
-        .isObject()
-        .withMessage('address must be a object'),
+        .withMessage('Provide address item id'),
       body('vendorId')
         .optional()
         .trim()

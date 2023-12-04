@@ -32,7 +32,6 @@ class CategoriesValidator {
         .trim()
         .notEmpty()
         .withMessage('Name is required')
-        .isLowercase()
         .toLowerCase(),
       body('description')
         .trim()

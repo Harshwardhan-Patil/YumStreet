@@ -6,7 +6,7 @@ module.exports = {
     './components/**/*.{js,jsx}',
     './app/**/*.{js,jsx}',
     './src/**/*.{js,jsx}',
-	],
+  ],
   theme: {
     container: {
       center: true,
@@ -51,6 +51,9 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        clipPath: {
+          border: 'polygon(50% 0%, 0 50%, 100% 50%)',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -76,5 +79,14 @@ module.exports = {
       }
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addUtilities }) {
+      const newUtilities = {};
+      newUtilities['.clip-border'] = {
+        clipPath: 'polygon(50% 0%, 0 50%, 100% 50%)',
+      };
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
+  ],
 }

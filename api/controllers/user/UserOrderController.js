@@ -1,8 +1,14 @@
 /* eslint-disable camelcase */
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { v4 as uuidv4 } from 'uuid';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
-import { OrderStatusEnum, STATUS_CODES } from '../../constants.js';
+import {
+  EventEnum,
+  OrderStatusEnum,
+  OrderTypesEnum,
+  STATUS_CODES,
+} from '../../constants.js';
 import {
   UserRepository,
   OrderRepository,
@@ -14,6 +20,7 @@ import {
 import ApiError from '../../utils/ApiErrors.js';
 import ApiResponse from '../../utils/ApiResponse.js';
 import { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } from '../../config/index.js';
+import Io from '../../sockets/index.js';
 
 class UserOrderController {
   constructor() {
@@ -35,7 +42,12 @@ class UserOrderController {
 
   async FindUserOrders(req, res, next) {
     try {
-      const orders = await this.orderDb.FindOrderByUserId(req.user.id);
+      const { page = 1, limit = 25 } = req.query;
+      const orders = await this.orderDb.FindOrderByUserId(
+        req.user.id,
+        page,
+        limit
+      );
 
       if (!orders) {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'user order not found');
@@ -45,7 +57,7 @@ class UserOrderController {
         .json(
           new ApiResponse(
             STATUS_CODES.OK,
-            [...orders],
+            orders,
             'User Order fetched successfully'
           )
         );
@@ -77,13 +89,7 @@ class UserOrderController {
 
   async CreateUserOrder(req, res, next) {
     try {
-      // Find or create address for the order
-      let address = null;
-      if (req.body.address) {
-        address = await this.addressDb.CreateAddress(req.body.address);
-      }
-
-      if (!address && !req.user.AddressId) {
+      if (!req.body.addressId) {
         throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Address does not exist');
       }
 
@@ -111,18 +117,20 @@ class UserOrderController {
       const orderOptions = {
         amount: parseInt(totalPrice * 100, 10), // in paisa
         currency: 'INR',
+        receipt: uuidv4(),
       };
       const razorpayOrder = await this.razorpay.orders.create(orderOptions);
 
       // Create an unpaid order in the database
       const unPaidOrder = await this.orderDb.CreateOrder({
         status: OrderStatusEnum.PENDING,
+        orderType: OrderTypesEnum.YUMSTREET_DELIVERY,
         orderDate: Date.now(),
         totalPrice,
         paymentId: razorpayOrder.id,
         userId: req.user.id,
         vendorId: req.body.vendorId || cart.cartItems[0].menuItem.vendorId,
-        addressId: address ? address.dataValues.id : req.user.AddressId,
+        addressId: req.body.addressId,
       });
 
       // Create order items and associate them with the order
@@ -183,6 +191,14 @@ class UserOrderController {
         }
         const cart = await this.cart.FindCartByUserId(req.user.id);
         await this.cart.DeleteCartById(cart.dataValues.id);
+
+        Io.emitSocketEvent({
+          req,
+          roomId: req.user.id,
+          event: EventEnum.ORDER_PLACED_EVENT,
+          payload: order,
+        });
+
         return res
           .status(200)
           .json(new ApiResponse(200, order, 'Order placed successfully'));

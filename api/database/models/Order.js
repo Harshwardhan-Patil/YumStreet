@@ -1,6 +1,10 @@
-import { DataTypes, Model } from 'sequelize';
+import Sequelize, { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../connection.js';
-import { AvailableOrderStatuses, OrderStatusEnum } from '../../constants.js';
+import {
+  AvailableOrderStatuses,
+  AvailableOrderTypes,
+  OrderStatusEnum,
+} from '../../constants.js';
 import User from './User.js';
 import Vendor from './Vendor.js';
 import Address from './Address.js';
@@ -26,10 +30,22 @@ Order.init(
         },
       },
     },
+    orderType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isValidStatus: (value) => {
+          if (!AvailableOrderTypes.includes(value)) {
+            throw new Error(`Invalid OrderType value: ${value}`);
+          }
+        },
+      },
+    },
 
     orderDate: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: Sequelize.NOW,
     },
     totalPrice: {
       type: DataTypes.DECIMAL(10, 2),

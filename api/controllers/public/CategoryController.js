@@ -1,3 +1,4 @@
+import { STATUS_CODES } from '../../constants.js';
 import { CategoryRepository } from '../../database/index.js';
 import ApiError from '../../utils/ApiErrors.js';
 import ApiResponse from '../../utils/ApiResponse.js';
@@ -14,11 +15,27 @@ class CategoryController {
       if (isCategoryExist) {
         throw new ApiError('Category already exists');
       }
-      const category = await this.db.CreateCategory({ name, description });
+      const { file } = req;
+      if (!file) {
+        throw new ApiError(
+          STATUS_CODES.BAD_REQUEST,
+          'Provide the image for the category'
+        );
+      }
+      const image = { localPath: file.path };
+      const category = await this.db.CreateCategory({
+        name,
+        description,
+        image,
+      });
       return res
         .status(201)
         .json(
-          new ApiResponse(201, { ...category }, 'Category created successfully')
+          new ApiResponse(
+            201,
+            { ...category.dataValues },
+            'Category created successfully'
+          )
         );
     } catch (error) {
       return next(error);
@@ -46,15 +63,11 @@ class CategoryController {
     try {
       const { query } = req.query;
       const categories = await this.db.FindCategoryByRegEX(query);
-      console.log(categories);
+
       return res
         .status(200)
         .json(
-          new ApiResponse(
-            200,
-            { ...categories },
-            'Categories found successfully'
-          )
+          new ApiResponse(200, categories, 'Categories found successfully')
         );
     } catch (error) {
       return next(error);

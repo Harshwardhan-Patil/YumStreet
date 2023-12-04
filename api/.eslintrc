@@ -13,5 +13,6 @@
       "prettier/prettier": ["error", { "endOfLine": "lf" }],
       "import/extensions": ["error", "ignorePackages"],
       "import/no-unresolved": "error"
+
    }
 }

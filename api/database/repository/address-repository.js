@@ -14,7 +14,7 @@ class AddressRepository {
         address,
         this.model
       );
-      console.log(validAddressData);
+
       const createdAddress = await this.model.create(validAddressData);
       return createdAddress;
     } catch (error) {
@@ -29,6 +29,19 @@ class AddressRepository {
   async FindAddressById(id) {
     try {
       const address = await this.model.findByPk(id);
+      return address;
+    } catch (error) {
+      throw new ApiError(
+        STATUS_CODES.INTERNAL_ERROR,
+        'Unable to find address',
+        error
+      );
+    }
+  }
+
+  async FindAddressesByUserId(userId) {
+    try {
+      const address = await this.model.findAll({ where: { UserId: userId } });
       return address;
     } catch (error) {
       throw new ApiError(

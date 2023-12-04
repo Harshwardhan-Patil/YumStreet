@@ -1,4 +1,4 @@
-import { STATUS_CODES } from '../../constants.js';
+import { OrderStatusEnum, STATUS_CODES } from '../../constants.js';
 import { OrderRepository, ReviewRepository } from '../../database/index.js';
 import ApiError from '../../utils/ApiErrors.js';
 import ApiResponse from '../../utils/ApiResponse.js';
@@ -12,7 +12,7 @@ class UserReviewController {
   async GetUserReviews(req, res, next) {
     try {
       const userReviews = await this.reviewDb.FindReviewsByUserId(
-        req.query.userId
+        req.query.userId || req.user.id
       );
       if (!userReviews) {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'User Review not found');
@@ -60,13 +60,20 @@ class UserReviewController {
       const order = await this.orderDb.FindOrderById(req.body.orderId);
 
       if (!order) {
-        throw new ApiError(STATUS_CODES.NOT_FOUND, 'user order not found');
+        throw new ApiError(STATUS_CODES.NOT_FOUND, 'User order not found');
+      }
+      if (order.dataValues.status !== OrderStatusEnum.DELIVERED) {
+        throw new ApiError(
+          STATUS_CODES.NOT_FOUND,
+          'User order has not been delivered'
+        );
       }
       const isReviewExist = await this.reviewDb.FindReviewByCondition({
         userId: req.user.id,
         vendorId: req.body.vendorId,
+        orderId: req.body.orderId,
       });
-      console.log(isReviewExist);
+
       if (isReviewExist) {
         throw new ApiError(STATUS_CODES.BAD_REQUEST, 'Review already exists');
       }
@@ -76,7 +83,7 @@ class UserReviewController {
         comment: req.body.comment || '',
         userId: req.user.id,
         vendorId: req.body.vendorId,
-        menuItemId: req.body.menuItemId,
+        orderId: req.body.orderId,
       });
 
       if (!review) {

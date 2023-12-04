@@ -8,10 +8,11 @@ class CartRepository {
     this.model = Cart;
   }
 
-  async CreateCart(user) {
+  async CreateCart(user, vendor) {
     try {
       const cart = await this.model.create();
       cart.setUser(user);
+      cart.setVendor(vendor);
       return cart;
     } catch (error) {
       throw new ApiError(

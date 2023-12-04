@@ -18,6 +18,14 @@ Category.init(
     description: {
       type: DataTypes.TEXT,
     },
+    image: {
+      type: DataTypes.JSONB,
+      defaultValue: {
+        url: 'https://via.placeholder.com/200x200.png',
+        localPath: '',
+      },
+      allowNull: false,
+    },
   },
   { sequelize, modelName: 'Category' }
 );

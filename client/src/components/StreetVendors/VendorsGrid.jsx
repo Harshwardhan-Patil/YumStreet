@@ -1,12 +1,11 @@
-import React from 'react'
 import VendorsCard from './VendorsCard'
 
-function VendorsGrid() {
+function VendorsGrid({ vendors }) {
     return (
-        <div className='inline-grid grid-cols-4 justify-center items-center gap-4'>
-            {Array(8).fill(0).map((i, index) => {
+        <div className='inline-grid grid-cols-5 justify-center items-center gap-4'>
+            {vendors?.map((vendor) => {
                 return (
-                    <VendorsCard index={index} />
+                    <VendorsCard key={vendor.id} vendor={vendor} />
                 )
             })}
         </div>

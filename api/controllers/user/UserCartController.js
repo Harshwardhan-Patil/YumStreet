@@ -4,6 +4,7 @@ import {
   CartRepository,
   CartItemRepository,
   MenuItemRepository,
+  VendorRepository,
 } from '../../database/index.js';
 import ApiError from '../../utils/ApiErrors.js';
 import ApiResponse from '../../utils/ApiResponse.js';
@@ -11,30 +12,38 @@ import ApiResponse from '../../utils/ApiResponse.js';
 class UserCartController {
   constructor() {
     this.userDb = new UserRepository();
-    this.cart = new CartRepository();
-    this.cartItem = new CartItemRepository();
-    this.menuItem = new MenuItemRepository();
+    this.cartDb = new CartRepository();
+    this.cartItemDb = new CartItemRepository();
+    this.menuItemDb = new MenuItemRepository();
+    this.vendorDb = new VendorRepository();
   }
 
   async GetUserCart(req, res, next) {
     try {
-      let cart;
-      if (!req.query.cartId) {
-        cart = await this.cart.FindCartByUserId(req.user.id);
-      }
+      const isOptions = Boolean(req.query.isOptions);
+      const cart = await this.cartDb.FindCartByUserId(req.user.id);
+
       if (!cart) {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'User cart not found');
       }
-      const cartItems = await this.cartItem.FindCartItemByCartId(
-        req.query.cartId || cart.dataValues.id
-      );
+
+      let cartItems;
+      if (isOptions) {
+        cartItems = await this.cartItemDb.FindCartItemsByCartIdWithInclude(
+          cart.dataValues.id
+        );
+      } else {
+        cartItems = await this.cartItemDb.FindCartItemByCartId(
+          cart.dataValues.id
+        );
+      }
 
       return res
         .status(STATUS_CODES.OK)
         .json(
           new ApiResponse(
             STATUS_CODES.OK,
-            [...cartItems],
+            cartItems,
             'User cart fetched successfully'
           )
         );
@@ -43,39 +52,70 @@ class UserCartController {
     }
   }
 
+  // TODO: If cart is empty and user tries to add another vendors menu item in cart
+  // TODO: then clear/delete the cart and create new cart with new vendors item
   async CreateUserCart(req, res, next) {
     try {
-      const isCartItemExist = await this.cartItem.FindCartItemByMenuItemId(
-        req.body.menuItemId
-      );
-      if (isCartItemExist) {
+      const { menuItemId } = req.body;
+      const { vendorId } = req.body;
+      const userId = req.user.id;
+
+      const existingCartItem =
+        await this.cartItemDb.FindCartItemByMenuItemId(menuItemId);
+      if (existingCartItem) {
         throw new ApiError(
           STATUS_CODES.BAD_REQUEST,
-          'Cart item is already in the cart'
+          'Item is already in the cart'
         );
       }
-      const menuItem = await this.menuItem.FindMenuItemById(
-        req.body.menuItemId
-      );
 
+      const menuItem = await this.menuItemDb.FindMenuItemById(menuItemId);
       if (!menuItem) {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'Menu item not found');
       }
 
-      const user = await this.userDb.FindUserById(req.user.id);
+      const user = await this.userDb.FindUserById(userId);
       if (!user) {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'User not found');
       }
 
-      let cart;
-      cart = await this.cart.FindCartByUserId(req.user.id);
-      console.log(cart);
-      if (!cart) {
-        cart = await this.cart.CreateCart(user);
+      let cart = await this.cartDb.FindCartByUserId(userId);
+      let vendor;
+
+      if (cart) {
+        vendor = await cart.getVendor();
+        if (!vendor) {
+          throw new ApiError(STATUS_CODES.NOT_FOUND, 'Vendor not found');
+        }
+
+        const cartItems = await cart.getCartItems();
+        if (cartItems.length === 0 && vendor.dataValues.id !== vendorId) {
+          await this.cartDb.DeleteCartById(cart.dataValues.id);
+          cart = null;
+        }
       }
-      console.log(cart);
+      if (cart && vendor.dataValues.id !== vendorId) {
+        throw new ApiError(
+          STATUS_CODES.BAD_REQUEST,
+          'Invalid vendor selection'
+        );
+      }
+
+      if (!cart) {
+        vendor = await this.vendorDb.FindVendorById(vendorId);
+        if (!vendor) {
+          throw new ApiError(STATUS_CODES.NOT_FOUND, 'Vendor not found');
+        }
+        cart = await this.cartDb.CreateCart(user, vendor);
+      }
+
       const body = { ...req.body, cartId: cart.dataValues.id };
-      const cartItem = await this.cartItem.CreateCartItem(body, cart, menuItem);
+      const cartItem = await this.cartItemDb.CreateCartItem(
+        body,
+        cart,
+        menuItem
+      );
+
       return res
         .status(STATUS_CODES.OK)
         .json(
@@ -93,7 +133,7 @@ class UserCartController {
   // update quantity only
   async UpdateUserCart(req, res, next) {
     try {
-      const cart = await this.cartItem.UpdateCartItem(req.params.itemId, {
+      const cart = await this.cartItemDb.UpdateCartItem(req.params.itemId, {
         quantity: req.body.quantity,
       });
 
@@ -113,7 +153,7 @@ class UserCartController {
 
   async DeleteUserCartItem(req, res, next) {
     try {
-      const cartItem = await this.cartItem.DeleteCartItemById(
+      const cartItem = await this.cartItemDb.DeleteCartItemById(
         req.params.itemId
       );
 
@@ -133,7 +173,7 @@ class UserCartController {
 
   async ClearUserCart(req, res, next) {
     try {
-      const cart = await this.cart.DeleteCartById(req.body.cartId);
+      const cart = await this.cartDb.DeleteCartById(req.body.cartId);
 
       return res
         .status(STATUS_CODES.OK)

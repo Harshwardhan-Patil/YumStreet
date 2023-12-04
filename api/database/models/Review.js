@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../connection.js';
 import User from './User.js';
 import Vendor from './Vendor.js';
-import MenuItem from './MenuItem.js';
+import Order from './Order.js';
 
 class Review extends Model {}
 
@@ -58,17 +58,20 @@ Review.belongsTo(Vendor, {
   },
 });
 
-MenuItem.hasMany(Review, {
+Order.hasOne(Review, {
   foreignKey: {
-    name: 'menuItemId',
+    name: 'orderId',
     allowNull: false,
   },
+  onDelete: 'CASCADE',
 });
-Review.belongsTo(MenuItem, {
+
+Review.belongsTo(Order, {
   foreignKey: {
-    name: 'menuItemId',
+    name: 'orderId',
     allowNull: false,
   },
+  onDelete: 'CASCADE',
 });
 
 export default Review;

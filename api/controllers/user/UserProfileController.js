@@ -16,15 +16,23 @@ class UserProfileController {
       if (!user) {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'User profile not found');
       }
+      const address = await user.getAddresses();
+      const orders = await user.getOrders();
+      const reviews = await user.getReviews();
 
-      console.log(await user.getAddress());
+      const userData = {
+        ...user.dataValues,
+        address: address.length > 0 ? address[0] : [],
+        orders,
+        reviews,
+      };
 
       return res
         .status(STATUS_CODES.OK)
         .json(
           new ApiResponse(
             STATUS_CODES.OK,
-            { ...user.dataValues },
+            userData,
             'User profile fetched successfully'
           )
         );

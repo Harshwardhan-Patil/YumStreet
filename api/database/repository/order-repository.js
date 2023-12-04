@@ -1,7 +1,15 @@
 import { STATUS_CODES } from '../../constants.js';
 import ApiError from '../../utils/ApiErrors.js';
 import Filter from '../../utils/Filter.js';
-import { MenuItem, Order, OrderItem } from '../models/index.js';
+import {
+  MenuItem,
+  Order,
+  OrderItem,
+  Review,
+  User,
+  Vendor,
+} from '../models/index.js';
+import Helper from '../../utils/Helper.js';
 
 class OrderRepository {
   constructor() {
@@ -11,6 +19,7 @@ class OrderRepository {
   async CreateOrder({
     status,
     orderDate,
+    orderType,
     totalPrice,
     paymentId,
     userId,
@@ -20,6 +29,7 @@ class OrderRepository {
     try {
       const order = await this.model.create({
         status,
+        orderType,
         orderDate,
         totalPrice,
         paymentId,
@@ -52,13 +62,84 @@ class OrderRepository {
     }
   }
 
-  async FindOrderByUserId(userId) {
+  async FindOrderByUserId(userId, modelOffset = 1, modelLimit = 25) {
+    const { pagination, offset, limit } = await Helper.GetPaginationOptions(
+      this.model,
+      modelOffset,
+      modelLimit
+    );
     try {
       const userOrders = await this.model.findAll({
         where: { userId },
-        include: [{ model: OrderItem, include: [MenuItem] }],
+        include: [
+          { model: OrderItem, include: [MenuItem] },
+          { model: Vendor },
+          { model: Review },
+        ],
+        order: [['createdAt', 'DESC']],
+        limit,
+        offset,
       });
-      return userOrders;
+      return { pagination, orders: userOrders };
+    } catch (error) {
+      throw new ApiError(
+        STATUS_CODES.INTERNAL_ERROR,
+        'Unable to find user order',
+        error
+      );
+    }
+  }
+
+  async FindOrderByVendorId(vendorId, modelOffset = 0, modelLimit = 25) {
+    const { pagination, offset, limit } = await Helper.GetPaginationOptions(
+      this.model,
+      modelOffset,
+      modelLimit
+    );
+    try {
+      const vendorOrders = await this.model.findAll({
+        where: { vendorId },
+        include: [
+          { model: OrderItem, include: [MenuItem] },
+          { model: User, attributes: { exclude: 'password' } },
+        ],
+        order: [['createdAt', 'DESC']],
+        limit,
+        offset,
+      });
+      return { pagination, orders: vendorOrders };
+    } catch (error) {
+      throw new ApiError(
+        STATUS_CODES.INTERNAL_ERROR,
+        'Unable to find user order',
+        error
+      );
+    }
+  }
+
+  async FindOrderByVendorIdWithStatus(
+    vendorId,
+    status,
+    modelOffset = 0,
+    modelLimit = 25
+  ) {
+    const { pagination, offset, limit } = await Helper.GetPaginationOptions(
+      this.model,
+      modelOffset,
+      modelLimit
+    );
+    try {
+      const vendorOrders = await this.model.findAll({
+        where: { vendorId, status },
+        include: [
+          { model: OrderItem, include: [MenuItem] },
+          { model: User, attributes: { exclude: 'password' } },
+        ],
+        order: [['createdAt', 'DESC']],
+        limit,
+        offset,
+      });
+      return { pagination, orders: vendorOrders };
     } catch (error) {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,

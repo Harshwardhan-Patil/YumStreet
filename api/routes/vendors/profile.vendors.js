@@ -14,7 +14,7 @@ router
   .route('/:vendorId')
   .get(VendorProfile.GetVendorProfile.bind(VendorProfile))
   .put(
-    Authenticator.VerifyToken,
+    Authenticator.VerifyVendorToken,
     upload.fields(VENDOR_IMAGE_FIELDS),
     VendorProfileValidator.UpdateProfile(),
     validate,

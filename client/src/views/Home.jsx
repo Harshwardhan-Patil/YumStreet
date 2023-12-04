@@ -8,6 +8,12 @@ import { ChooseLocation, ChooseFood, Delivery } from '@/assets/illustration';
 import WorkingGuide, { IllustrationAndInfo } from '@/components/common/WorkingGuide';
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import useScrollTop from '@/hooks/useScrollTop';
+import { useNearByVendorQuery, useTrendingVendorQuery } from '@/lib/helpers/useVendorQuery';
+import { useSelector } from 'react-redux';
+import VendorGridSkeleton from '@/components/Skeleton/VendorGridSkeleton';
+import { Toaster } from '@/components/ui/toaster';
+import useUserLocation from '@/hooks/useUserLocation';
+import { SortByEnum } from '@/constants/constants';
 
 const background = {
   backgroundImage: `linear-gradient(0deg, rgba(0,0,0,.4) 0%, rgba(37,40,43,0.2) 100%),
@@ -21,19 +27,21 @@ const background = {
 
 
 function Home() {
-
+  const { city } = useSelector(state => state.location);
   useScrollTop();
 
   return (
     <HomeLayout>
       <>
+        <Toaster />
         <div
           style={background}
           className="relative flex h-[60vh] flex-col items-center justify-center text-primary-foreground"
         >
-          <div className="absolute z-10 left-1/2 top-1/2 flex w-full translate-x-[-50%] translate-y-[-50%] transform flex-col items-center justify-center">
+          {/* <Logo className={'w-[200px] absolute top-5 '} /> */}
+          <div className="absolute z-10 left-1/2 top-2/3 flex w-full translate-x-[-50%] translate-y-[-50%] transform flex-col items-center justify-center">
             <h1 className="mb-8 text-4xl">
-              Discover the best street food & drinks in Kolhapur
+              Discover the best street food & drinks in <span>{city ? city : "Your location"}</span>
             </h1>
             <SearchVendors />
           </div>
@@ -47,26 +55,37 @@ function Home() {
 }
 
 function NearByStreetVendors() {
+  const { location } = useUserLocation();
+  const { city } = useSelector(state => state.location);
+  const { data, isLoading } = useNearByVendorQuery(location);
   return (
-    <section className='m-section'>
-      <div className='mb-6'>
-        <h2 className='text-2xl font-bold'>Near By Street Vendors</h2>
-      </div>
-      <VendorsGrid />
-      <ViewAllButton link={`/kolhapur/near-by-street-vendors`} />
-    </section>
+    isLoading
+      ? <VendorGridSkeleton length={10} />
+      : data?.vendors?.length > 0 && <section className='m-section'>
+        <div className='mb-6'>
+          <h2 className='text-2xl font-semibold'>Near By Street Vendors</h2>
+        </div>
+        <VendorsGrid vendors={data?.vendors} />
+        <ViewAllButton link={`/${city}?sort-by=${SortByEnum.nearBy.key}`} />
+      </section>
   )
 }
 
+
 function TopStreetVendors() {
+  const { city } = useSelector(state => state.location);
+  const { data, isLoading } = useTrendingVendorQuery({ city });
+
   return (
-    <section className='m-section'>
-      <div className='mb-6'>
-        <h2 className='text-2xl font-bold'>Top Street Vendors</h2>
-      </div>
-      <VendorsGrid />
-      <ViewAllButton link={`/kolhapur/top-street-vendors`} />
-    </section>
+    isLoading
+      ? <VendorGridSkeleton length={10} />
+      : data?.vendors.length > 0 && <section className='m-section'>
+        <div className='mb-6'>
+          <h2 className='text-2xl font-semibold text-primary/90'>Top Street Vendors in <span className='font-bold'>{city}</span></h2>
+        </div>
+        <VendorsGrid vendors={data?.vendors} />
+        <ViewAllButton link={`/${city}?sort-by=${SortByEnum.popularity.key}`} />
+      </section>
   )
 }
 

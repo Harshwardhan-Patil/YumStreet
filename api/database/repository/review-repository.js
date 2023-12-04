@@ -1,21 +1,21 @@
 import { STATUS_CODES } from '../../constants.js';
 import ApiError from '../../utils/ApiErrors.js';
 import Filter from '../../utils/Filter.js';
-import { MenuItem, Review, User, Vendor } from '../models/index.js';
+import { Address, Review, User, Vendor } from '../models/index.js';
 
 class ReviewRepository {
   constructor() {
     this.model = Review;
   }
 
-  async CreateReview({ rating, comment = '', userId, vendorId, menuItemId }) {
+  async CreateReview({ rating, comment = '', userId, vendorId, orderId }) {
     try {
       const review = await this.model.create({
         rating,
         comment,
         userId,
         vendorId,
-        menuItemId,
+        orderId,
       });
       return review;
     } catch (error) {
@@ -39,7 +39,7 @@ class ReviewRepository {
     try {
       const reviews = await this.model.findAll({
         where: { vendorId },
-        include: [User, MenuItem],
+        include: [{ model: User, attributes: { exclude: 'password' } }],
       });
       return reviews;
     } catch (error) {
@@ -51,7 +51,13 @@ class ReviewRepository {
     try {
       const reviews = await this.model.findAll({
         where: { userId },
-        include: [Vendor, MenuItem],
+        include: [
+          {
+            model: Vendor,
+            attributes: { exclude: 'license' },
+            include: [Address],
+          },
+        ],
       });
       return reviews;
     } catch (error) {

@@ -11,18 +11,20 @@ class UserAuthController {
   }
 
   async Register(req, res, next) {
-    const { email, password, role } = req.body;
+    const { firstname, lastname, email, password, role } = req.body;
     try {
       const isUserExist = await this.db.FindUserByEmail(email);
       if (isUserExist) {
         throw new ApiError(
           STATUS_CODES.CONFLICT,
-          'User with email or username already exists'
+          'User with email already exists'
         );
       }
 
       const hashedPassword = await Password.hash(password);
       const user = await this.db.CreateUser({
+        firstname,
+        lastname,
         email,
         password: hashedPassword,
         role,
@@ -47,7 +49,7 @@ class UserAuthController {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'User not found');
       }
 
-      const isPasswordCorrect = Password.compare(password, user.password);
+      const isPasswordCorrect = await Password.compare(password, user.password);
       if (!isPasswordCorrect) {
         throw new ApiError(STATUS_CODES.UN_AUTHORIZED, 'Invalid password');
       }
@@ -61,7 +63,7 @@ class UserAuthController {
       const { password: userHashedPassword, ...userData } = user.dataValues;
 
       const options = {
-        httpOnly: true,
+        httpOnly: process.env.NODE_ENV === 'production',
         secure: process.env.NODE_ENV === 'production',
       };
 
@@ -71,7 +73,7 @@ class UserAuthController {
         .json(
           new ApiResponse(
             STATUS_CODES.OK,
-            { user: userData, accessToken },
+            { ...userData, accessToken },
             'User logged in successfully'
           )
         );

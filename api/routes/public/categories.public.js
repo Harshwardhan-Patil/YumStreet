@@ -3,15 +3,19 @@ import { Router } from 'express';
 import CategoriesValidator from '../../validators/public/CategoriesValidator.js';
 import validate from '../../validators/validate.js';
 import CategoryController from '../../controllers/public/CategoryController.js';
+import upload from '../../middlewares/Multer.js';
 
 const router = Router();
 const Category = new CategoryController();
-router.route('/').get(Category.GetAllCategories.bind(Category)).post(
-  // Authenticator.VerifyToken,
-  CategoriesValidator.CreateCategory(),
-  validate,
-  Category.CreateCategory.bind(Category)
-);
+router
+  .route('/')
+  .get(Category.GetAllCategories.bind(Category))
+  .post(
+    upload.single('image'),
+    CategoriesValidator.CreateCategory(),
+    validate,
+    Category.CreateCategory.bind(Category)
+  );
 router
   .route('/multiple')
   .post(

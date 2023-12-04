@@ -24,4 +24,11 @@ router.post(
   VendorAuth.Register.bind(VendorAuth)
 );
 
+router.post(
+  '/login',
+  VendorAuthValidator.Login(),
+  validate,
+  VendorAuth.Login.bind(VendorAuth)
+);
+
 export default router;

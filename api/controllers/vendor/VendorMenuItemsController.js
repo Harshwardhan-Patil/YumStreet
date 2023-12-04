@@ -14,6 +14,26 @@ class VendorMenuItemsController {
     this.db = new MenuItemRepository();
   }
 
+  static #CategoryWiseMenuItems(menuItems) {
+    if (menuItems.length === 0) return undefined;
+    const CategoryWiseMenuItems = menuItems.reduce((acc, item) => {
+      const { categoryId } = item.dataValues;
+      const { Category, ...itemData } = item.dataValues;
+
+      if (!acc[categoryId]) {
+        acc[categoryId] = {
+          ...Category.dataValues,
+          menuItems: [],
+        };
+      }
+
+      acc[categoryId].menuItems.push(itemData);
+      return acc;
+    }, {});
+
+    return Object.values(CategoryWiseMenuItems);
+  }
+
   async CreateVendorMenuItem(req, res, next) {
     try {
       const isMenuItemExist = await this.db.FindMenuItemByName(
@@ -53,7 +73,6 @@ class VendorMenuItemsController {
     }
   }
 
-  // TODO: Find solution to  send the menu item by filtering items by category
   async GetVendorMenuItems(req, res, next) {
     try {
       const menuItems = await this.db.FindMenuItemsByVendorId(
@@ -64,30 +83,38 @@ class VendorMenuItemsController {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'No menu items found');
       }
 
-      const CategoryWiseMenuItems = menuItems.reduce((acc, item) => {
-        const { categoryId } = item.dataValues;
-        const { Category, ...itemData } = item.dataValues;
-
-        if (!acc[categoryId]) {
-          acc[categoryId] = {
-            ...Category.dataValues,
-            menuItems: [],
-          };
-        }
-
-        acc[categoryId].menuItems.push(itemData);
-        return acc;
-      }, {});
-
-      const outputCategories = Object.values(CategoryWiseMenuItems);
+      const categoryWiseMenuItems =
+        VendorMenuItemsController.#CategoryWiseMenuItems(menuItems);
 
       return res
         .status(STATUS_CODES.OK)
         .json(
           new ApiResponse(
             STATUS_CODES.OK,
-            outputCategories,
+            categoryWiseMenuItems,
             'Menu Items fetched successfully'
+          )
+        );
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async SearchVendorMenuItem(req, res, next) {
+    try {
+      let menuItems = await this.db.FindMenuItemByLike(req.query.query);
+      if (menuItems.length <= 0) {
+        menuItems = [];
+      }
+      const categoryWiseMenuItems =
+        VendorMenuItemsController.#CategoryWiseMenuItems(menuItems);
+      return res
+        .status(STATUS_CODES.OK)
+        .json(
+          new ApiResponse(
+            STATUS_CODES.OK,
+            categoryWiseMenuItems,
+            'Menu Items searched successfully'
           )
         );
     } catch (error) {
@@ -101,7 +128,6 @@ class VendorMenuItemsController {
         ? { image: { localPath: req.file.path }, ...req.body }
         : req.body;
       const menuItem = await this.db.UpdateMenuItem(req.params.itemId, body);
-      console.log(menuItem);
       return res
         .status(STATUS_CODES.OK)
         .json(
@@ -118,8 +144,7 @@ class VendorMenuItemsController {
 
   async DeleteVendorMenuItem(req, res, next) {
     try {
-      const menuItem = await this.db.DeleteMenuItemById(req.params.itemId);
-      console.log(menuItem);
+      await this.db.DeleteMenuItemById(req.params.itemId);
       return res
         .status(STATUS_CODES.OK)
         .json(

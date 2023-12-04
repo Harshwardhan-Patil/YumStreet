@@ -35,25 +35,15 @@ class VendorAddressController {
 
   async UpdateVendorAddress(req, res, next) {
     try {
-      if (!req.body.vendorId) {
+      const { addressId } = req.params;
+      if (!addressId) {
         throw new ApiError(
           STATUS_CODES.BAD_REQUEST,
-          'Please provide vendor Id'
+          'Provided address id not present'
         );
       }
-      const vendor = await this.vendorDb.FindVendorByIdWithModel(
-        req.body.vendorId,
-        ['Address']
-      );
-      if (!vendor) {
-        throw new ApiError(STATUS_CODES.NOT_FOUND, 'vendor not found');
-      }
-      const address = vendor.dataValues.Address.dataValues;
-      if (!address) {
-        throw new ApiError(STATUS_CODES.NOT_FOUND, 'Address not found');
-      }
       const vendorAddress = await this.addressDb.UpdateAddress(
-        address.id,
+        addressId,
         req.body
       );
 

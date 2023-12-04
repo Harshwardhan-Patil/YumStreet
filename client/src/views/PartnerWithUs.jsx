@@ -1,5 +1,5 @@
 import backgroundImage from '@/assets/Temp/partner-with-us.webp';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChooseLocation, ChooseFood, Delivery } from '@/assets/illustration';
 import WorkingGuide, { IllustrationAndInfo } from '@/components/common/WorkingGuide';
 import Footer from '@/components/Layout/Footer';
@@ -38,8 +38,8 @@ function PartnerWithUs() {
             >
                 <h1 className='text-4xl mb-3'>Add your vendor to {YumStreet.TITLE}</h1>
                 <div className='my-4 flex gap-5'>
-                    <Link to={route.VENDOR_SIGNUP} className={link + 'bg-blue-600 hover:bg-blue-700'}>Register Your Vendor Account</Link>
-                    <Link to={route.VENDOR_LOGIN} className={link + 'bg-white hover:bg-neutral-200 text-primary'}>Login to track Vendor Performance.</Link>
+                    <Link to={route.VENDOR_REGISTER} className={link + 'bg-blue-600 hover:bg-blue-700'}>Register Your Vendor Account</Link>
+                    <Link to={route.VENDOR_LOGIN} className={link + 'bg-white hover:bg-neutral-200 text-primary'}>Registered Vendor? Log In Now</Link>
                 </div>
                 <span className='text-sm'>Need help? Please email us at <a href={`mailto:${YumStreet.EMAIL}`}>{YumStreet.EMAIL}</a></span>
                 <GoBackLink />

@@ -4,10 +4,9 @@ import ApiError from '../utils/ApiErrors.js';
 import Helper from '../utils/Helper.js';
 
 class ErrorHandler {
-  
-  static handle(err, req, res, next) {
+  static handle(err, req, res) {
     if (process.env.NODE_ENV === 'development') {
-      console.log(err);
+      console.error(err);
     }
 
     let error = err;

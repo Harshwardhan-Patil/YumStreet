@@ -1,7 +1,8 @@
+import { Op } from 'sequelize';
 import { STATUS_CODES } from '../../constants.js';
 import ApiError from '../../utils/ApiErrors.js';
 import Filter from '../../utils/Filter.js';
-import { MenuItem } from '../models/index.js';
+import { Category, MenuItem } from '../models/index.js';
 
 class MenuItemRepository {
   constructor() {
@@ -47,6 +48,23 @@ class MenuItemRepository {
       throw new ApiError(
         STATUS_CODES.INTERNAL_ERROR,
         'Unable to find menu item'
+      );
+    }
+  }
+
+  async FindMenuItemByLike(query) {
+    try {
+      const menuItems = await this.model.findAll({
+        where: { name: { [Op.iLike]: `%${query}%` } },
+        include: [Category],
+        limit: 25,
+      });
+      return menuItems;
+    } catch (error) {
+      throw new ApiError(
+        STATUS_CODES.INTERNAL_ERROR,
+        'Unable to find menu items ',
+        error
       );
     }
   }

@@ -19,13 +19,13 @@ function UserProfileLayout({ children }) {
                     >
                         Reviews
                     </Link>
-                    <Link to={`/user/${params.username}/${route.USER_ORDER_HISTORY}`}
-                        className={cn(sidebarLink.common, `${location === route.USER_ORDER_HISTORY ? sidebarLink.active : null}`)}
+                    <Link to={`/user/${params.username}/${route.USER_ORDERS}`}
+                        className={cn(sidebarLink.common, `${location === route.USER_ORDERS ? sidebarLink.active : null}`)}
                     >
                         Order History
                     </Link>
                     <Link to={`/user/${params.username}/${route.USER_ADDRESS}`}
-                        className={cn(sidebarLink.common, sidebarLink.last, `${location === route.USER_ADDRESS ? sidebarLink.active : null}`)}
+                        className={cn(sidebarLink.common, `${location === route.USER_ADDRESS ? sidebarLink.active : null}`)}
                     >
                         Address
                     </Link>

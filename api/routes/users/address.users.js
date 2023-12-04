@@ -10,19 +10,22 @@ const UserAddress = new UserAddressController();
 
 router
   .route('/')
+  .get(UserAddress.GetUserAddress.bind(UserAddress))
   .post(
     AddressValidator.CreateAddress(),
     validate,
     UserAddress.CreateUserAddress.bind(UserAddress)
   );
 
+router.route('/all').get(UserAddress.GetAllUserAddress.bind(UserAddress));
+
 router
   .route('/:addressId')
-  .get(UserAddress.GetUserAddress.bind(UserAddress))
   .put(
     AddressValidator.UpdateAddress(),
     validate,
     UserAddress.UpdateUserAddress.bind(UserAddress)
-  );
+  )
+  .delete(UserAddress.DeleteUserAddress.bind(UserAddress));
 
 export default router;

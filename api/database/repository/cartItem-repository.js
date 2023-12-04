@@ -14,7 +14,6 @@ class CartItemRepository {
         cartItemData,
         this.model
       );
-      console.log(validCartItemData);
       const cartItem = await this.model.create(validCartItemData);
       cartItem.setCart(cart);
       cartItem.setMenuItem(menuItem);

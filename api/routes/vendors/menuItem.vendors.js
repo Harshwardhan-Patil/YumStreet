@@ -19,20 +19,22 @@ router
 
 // To add a new menu item to vendor
 router
-  .use(Authenticator.VerifyToken)
   .route('/items')
   .post(
+    Authenticator.VerifyVendorToken,
     upload.single('image'),
     VendorMenuItemsValidator.CreateMenuItem(),
     validate,
     VendorMenuItems.CreateVendorMenuItem.bind(VendorMenuItems)
   );
 
-// Todo: implement search controller
-router.get('/items/search');
+router.get(
+  '/items/search',
+  VendorMenuItems.SearchVendorMenuItem.bind(VendorMenuItems)
+);
 
 router
-  .use(Authenticator.VerifyToken)
+  .use(Authenticator.VerifyVendorToken)
   .route('/items/:itemId')
   .put(
     upload.single('image'),

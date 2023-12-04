@@ -3,7 +3,12 @@ import { body } from 'express-validator';
 class VendorProfileValidator {
   static UpdateProfile() {
     return [
-      body('name').optional().trim().notEmpty().withMessage('name is required'),
+      body('name')
+        .optional()
+        .trim()
+        .toLowerCase()
+        .notEmpty()
+        .withMessage('name is required'),
       body('description')
         .optional()
         .trim()

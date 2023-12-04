@@ -6,21 +6,22 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from '@/redux/store';
+import MainLoading from './components/Skeleton/MainLoading';
 
 const queryClient = new QueryClient();
 function App() {
   return (
     <>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <BrowserRouter>
-              <QueryClientProvider client={queryClient}>
-              <Suspense fallback={<div>Loading</div>}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <BrowserRouter>
+            <QueryClientProvider client={queryClient}>
+              <Suspense fallback={<MainLoading />}>
                 <AppRouter />
               </Suspense>
-              </QueryClientProvider>
-            </BrowserRouter>
-          </PersistGate>
+            </QueryClientProvider>
+          </BrowserRouter>
+        </PersistGate>
       </Provider>
     </>
   );

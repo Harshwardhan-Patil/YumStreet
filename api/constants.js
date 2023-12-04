@@ -1,6 +1,7 @@
 export const UserRolesEnum = {
   ADMIN: 'ADMIN',
   USER: 'USER',
+  VENDOR: 'VENDOR',
 };
 
 export const AvailableUserRoles = Object.values(UserRolesEnum);
@@ -18,11 +19,22 @@ export const STATUS_CODES = {
 
 export const OrderStatusEnum = {
   PENDING: 'PENDING',
+  PREPARING: 'PREPARING',
+  READY: 'READY',
+  PICKED_UP: 'PICKED_UP',
   CANCELLED: 'CANCELLED',
   DELIVERED: 'DELIVERED',
 };
 
 export const AvailableOrderStatuses = Object.values(OrderStatusEnum);
+
+export const OrderTypesEnum = {
+  YUMSTREET_DELIVERY: 'YUMSTREET_DELIVERY',
+  SELF_DELIVERY: 'SELF_DELIVERY',
+  PICKUP: 'PICKUP',
+};
+
+export const AvailableOrderTypes = Object.values(OrderTypesEnum);
 
 export const FILE_EXTENSIONS = ['.png', '.jpg', '.jpeg'];
 
@@ -32,3 +44,21 @@ export const VENDOR_IMAGE_FIELDS = [
   { name: 'images', maxCount: 5 },
   { name: 'license', maxCount: 1 },
 ];
+
+export const EventEnum = {
+  CONNECTED_EVENT: 'connected',
+  DISCONNECT_EVENT: 'disconnect',
+  SOCKET_ERROR_EVENT: 'socketError',
+  ORDER_PLACED_EVENT: 'orderPlaced',
+};
+
+export const MAXIMUM_DELIVERY_DISTANCE = 8; //  in kilometer
+
+export const SortByEnum = {
+  popularity: 'popularity',
+  nearBy: 'nearBy',
+  rating: 'rating',
+  deliveryTime: 'deliveryTime',
+  costLowToHigh: 'costLowToHigh',
+  costHighToLow: 'costHighToLow',
+};

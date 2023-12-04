@@ -10,7 +10,7 @@ router
   .route('/:addressId')
   .get(VendorAddress.GetVendorAddress.bind(VendorAddress))
   .put(
-    Authenticator.VerifyToken,
+    Authenticator.VerifyVendorToken,
     AddressValidator.UpdateAddress(),
     validate,
     VendorAddress.UpdateVendorAddress.bind(VendorAddress)

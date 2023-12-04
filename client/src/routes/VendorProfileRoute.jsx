@@ -19,12 +19,12 @@ function VendorProfileRoute() {
             <VendorProfile />
             <section className='m-section flex'>
                 <Sidebar.Left>
-                    <Link to={`/${params.city}/${params.vendorName}/${route.VIEW_VENDOR_MENU}`}
+                    <Link to={`/${params.city}/${params.vendorId}/${route.VIEW_VENDOR_MENU}`}
                         className={cn(sidebarLink.common, sidebarLink.first, `${location === route.VIEW_VENDOR_MENU ? sidebarLink.active : null}`)}
                     >
                         Menu
                     </Link>
-                    <Link to={`/${params.city}/${params.vendorName}/${route.VIEW_VENDOR_REVIEWS}`}
+                    <Link to={`/${params.city}/${params.vendorId}/${route.VIEW_VENDOR_REVIEWS}`}
                         className={cn(sidebarLink.common, `${location === route.VIEW_VENDOR_REVIEWS ? sidebarLink.active : null}`)}
                     >
                         Reviews

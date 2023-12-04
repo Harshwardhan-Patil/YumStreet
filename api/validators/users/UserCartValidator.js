@@ -3,6 +3,7 @@ import { body, checkExact } from 'express-validator';
 class UserCartValidator {
   static CreateCart() {
     return checkExact([
+      body('vendorId').trim().notEmpty().withMessage('Provide vendor id'),
       body('menuItemId').trim().notEmpty().withMessage('Provide menu item id'),
       body('quantity')
         .trim()

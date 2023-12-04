@@ -35,7 +35,7 @@ router.put(
   UserOrder.UpdateUserOrderStatus.bind(UserOrder)
 );
 
-// change status to canceled
+// Todo: don't delete it change status to canceled
 router.delete(
   '/:orderId/cancel',
   UserOrderValidator.DeleteOrder(),

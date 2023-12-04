@@ -6,7 +6,6 @@ import validate from '../../validators/validate.js';
 
 const router = Router();
 const VendorReview = new VendorReviewController();
-router.use(Authenticator.VerifyToken);
 
 router
   .route('/')
@@ -17,6 +16,9 @@ router
   );
 router
   .route('/:reviewId')
-  .get(VendorReview.FindVendorReview.bind(VendorReview));
+  .get(
+    Authenticator.VerifyVendorToken,
+    VendorReview.FindVendorReview.bind(VendorReview)
+  );
 
 export default router;
