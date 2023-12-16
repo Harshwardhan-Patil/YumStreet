@@ -46,7 +46,7 @@ Vendor.init(
 User.hasOne(Vendor, { onDelete: 'CASCADE' });
 Vendor.belongsTo(User);
 
-Address.hasOne(User);
+Address.hasOne(Vendor);
 Vendor.belongsTo(Address, { onDelete: 'CASCADE' });
 
 Vendor.addHook('beforeDestroy', async (vendor) => {

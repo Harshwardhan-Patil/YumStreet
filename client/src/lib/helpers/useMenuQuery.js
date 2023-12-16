@@ -107,7 +107,7 @@ export function useHandleMenuStockQuery() {
                 queryClient.setQueriesData(menuItemQueryKey, ctx.previousMenu);
             },
             onSettled: () => {
-                queryClient.invalidateQueries(menuItemQueryKey);
+                queryClient.invalidateQueries([menuItemQueryKey]);
             },
         }
     );

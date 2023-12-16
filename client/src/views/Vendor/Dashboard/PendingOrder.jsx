@@ -20,11 +20,13 @@ function PendingOrder() {
         <main>
             <div>
                 {isLoading && <MenuSkeleton row={3} column={4} />}
-                {isSuccess && data.pages.map((pages) => {
-                    return pages.data.data.orders.map((order, index) => {
-                        return (<OrderCard key={order.id} order={order} index={index} ref={pages.data.data.orders.length - 1 === index ? observerRef : null} />)
-                    })
-                })}
+                <div className="flex gap-4 flex-wrap">
+                    {isSuccess && data.pages.map((pages) => {
+                        return pages.data.data.orders.map((order, index) => {
+                            return (<OrderCard key={order.id} order={order} index={index} ref={pages.data.data.orders.length - 1 === index ? observerRef : null} />)
+                        })
+                    })}
+                </div>
                 {isFetchingNextPage && hasNextPage &&
                     <SpinLoader
                         color={"rgb(239, 68, 68)"}
@@ -89,7 +91,7 @@ const OrderCard = forwardRef(({ order }, ref) => {
                 <span>{order.OrderItems.length > 2 ? `+${order.OrderItems.length - 1} items` : ''}</span>
             </CardContent>
             <CardFooter>
-                <div className="w-full flex justify-between items-center mt-4">
+                <div className="w-full flex gap-3 justify-between items-center mt-4">
                     <span className="font-semibold">
                         Total: {CURRENCY_INR} {order.totalPrice}
                     </span>

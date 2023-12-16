@@ -97,7 +97,7 @@ class UserCartController {
       if (cart && vendor.dataValues.id !== vendorId) {
         throw new ApiError(
           STATUS_CODES.BAD_REQUEST,
-          'Invalid vendor selection'
+          'Unable to add items from multiple vendors to your cart. Please complete the current order first.'
         );
       }
 

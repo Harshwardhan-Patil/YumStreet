@@ -1,6 +1,7 @@
 import { useCartQuery, useCreateCartQuery, useRemoveCartItemsQuery, useUpdateCartItemsQuery } from '@/lib/helpers/useCartQuery';
 import { cn } from '@/lib/utils';
-import { addCart, addCartItem, clearCart, removeCartItem, updateCartItem } from '@/redux/user/slices/cartSlice';
+import { useNavigate } from 'react-router-dom';
+import { addCart, addCartItem, removeCartItem, updateCartItem } from '@/redux/user/slices/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Toaster, toastError } from '../ui/toaster';
@@ -93,14 +94,19 @@ function AddCartItem({ item }) {
 
 function AddCartItemToCart({ item }) {
     const { id } = useSelector(state => state.cart);
+    const { isAuth } = useSelector(state => state.auth);
+    const navigate = useNavigate();
     const { toast } = useToast();
     const { vendorId } = useParams();
     const dispatch = useDispatch();
     const { mutate: addToCart, isLoading } = useCreateCartQuery();
 
     const handleCart = () => {
+        if (!isAuth) {
+            navigate('/login');
+            return;
+        }
         if (!id) {
-            dispatch(clearCart())
             addToCart({ vendorId, menuItemId: item.id, quantity: 1 }, {
                 onSuccess: (response) => {
                     dispatch(addCart({

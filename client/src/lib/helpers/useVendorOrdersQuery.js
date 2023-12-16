@@ -31,7 +31,8 @@ export function useUpdateVendorOrderStatuses() {
     const queryClient = useQueryClient()
     return useMutation(updateVendorOrderStatuses, {
         onSettled: () => {
-            queryClient.refetchQueries(VendorOrderQueryKey);
+            // queryClient.refetchQueries(VendorOrderQueryKey);
+            queryClient.invalidateQueries([VendorOrderQueryKey]);
         }
     })
 }
@@ -40,7 +41,8 @@ export function useCancelVendorOrder() {
     const queryClient = useQueryClient()
     return useMutation(cancelVendorOrder, {
         onSettled: () => {
-            queryClient.refetchQueries(VendorOrderQueryKey);
+            // queryClient.refetchQueries(VendorOrderQueryKey);
+            queryClient.invalidateQueries([VendorOrderQueryKey]);
         }
     })
 }

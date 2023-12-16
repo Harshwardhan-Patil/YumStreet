@@ -1,4 +1,4 @@
-import backgroundImage from '@/assets/Temp/Hero-bg.avif';
+import backgroundImage from '@/assets/Temp/HomeBanner.jpeg';
 import HomeLayout from '@/components/Layout/HomeLayout';
 import SearchVendors from '@/components/Search/SearchVendors';
 import VendorsGrid from '@/components/StreetVendors/VendorsGrid';
@@ -16,7 +16,7 @@ import useUserLocation from '@/hooks/useUserLocation';
 import { SortByEnum } from '@/constants/constants';
 
 const background = {
-  backgroundImage: `linear-gradient(0deg, rgba(0,0,0,.4) 0%, rgba(37,40,43,0.2) 100%),
+  backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.4) 0%, rgba(3,4,4,0.4) 100%),
       url(${backgroundImage})`,
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',

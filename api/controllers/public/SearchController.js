@@ -19,10 +19,11 @@ class SearchController {
     try {
       const { query, city } = req.query;
       const condition = city
-        ? { include: [{ model: Address, where: { city } }, { model: Review }] }
+        ? {
+            include: [{ model: Address, where: { city } }, { model: Review }],
+          }
         : { model: Review };
       const vendors = await this.vendorDb.FindVendorByLike(query, condition);
-
       const vendorsData = vendors.map((vendor) => {
         const { Reviews, license, ...vendorData } = vendor.dataValues;
         const averageRating = Helper.GetAverageRating(Reviews);

@@ -5,14 +5,21 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { userLogout } from "@/redux/user/api/authApi";
 import { useDispatch } from "react-redux";
 import { route } from "@/constants";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { useUserProfile } from "@/lib/helpers/useUserQuery";
 
 
 function UserDropDown({ id }) {
+    const { data: user } = useUserProfile();
     return (
         <Popover>
             <PopoverTrigger className={popoverTrigger}>
-                <UserCircle2 style={{ width: '35px', height: '30px' }} />
-                Harsh
+                <Avatar className='w-14 h-14 bg-neutral-400 border-4 rounded-full border-white'>
+                    <AvatarImage src={user?.avatar.url || `${route.API}/${user?.avatar.localPath}`} className="rounded-full" />
+                    <AvatarFallback><UserCircle2 style={{ width: '35px', height: '30px' }} /></AvatarFallback>
+                </Avatar>
+
+                {`${user?.firstname} ${user?.lastname}`.slice(0, 8) || 'User Name'}
                 <ChevronDownIcon className={`duration-300 transition-all  w-6 fill-black`} />
             </PopoverTrigger>
             <PopoverContent align='end' sideOffset={10} className='w-48 py-2'>

@@ -242,6 +242,7 @@ class FilterController {
         limit,
         page
       );
+
       let vendorsData = [];
 
       // Sort By section
@@ -269,6 +270,7 @@ class FilterController {
       } else {
         vendorsData = await SortBy.popularity();
       }
+
       // Rating section
       if (minRating) {
         vendorsData =

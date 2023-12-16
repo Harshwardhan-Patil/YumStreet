@@ -1,5 +1,6 @@
 import { Button } from '../ui/button'
-import { Clock, Forward, Grid, Map } from 'lucide-react'
+// import { Clock, Forward, Grid, Map } from 'lucide-react'
+import { Clock, Grid, } from 'lucide-react'
 import { MapPinIcon } from '@heroicons/react/24/solid'
 import Rating from '../common/Rating'
 import useDocumentTitle from '@/hooks/useDocumentTitle'
@@ -52,7 +53,7 @@ function VendorProfile() {
                                 </div>
                             </div>
                         </div>
-                        <div className='flex items-center gap-4'>
+                        {/* <div className='flex items-center gap-4'>
                             <Button className={otherButtons}>
                                 <Map className='w-5 stroke-red-500' />
                                 Location
@@ -61,7 +62,7 @@ function VendorProfile() {
                                 <Forward className='w-5 stroke-red-500' />
                                 Share
                             </Button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </section>
@@ -130,15 +131,15 @@ overflow-hidden
 
 `
 
-const otherButtons = `
-flex 
-gap-2 
-bg-transparent 
-text-primary
-border
-border-primary 
-hover:bg-transparent
-px-2
-py-1
-`
+// const otherButtons = `
+// flex 
+// gap-2 
+// bg-transparent 
+// text-primary
+// border
+// border-primary 
+// hover:bg-transparent
+// px-2
+// py-1
+// `
 export default VendorProfile

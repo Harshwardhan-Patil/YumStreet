@@ -18,12 +18,15 @@ const vendorSlice = createSlice({
         setVendorName: (state, action) => {
             state.name = action.payload;
         },
+        setVendorToDefault: () => {
+            return initialState;
+        },
         error: (state, action) => {
             state.error = action.payload;
         },
     },
 });
 
-export const { setVendor, setVendorName, error } = vendorSlice.actions;
+export const { setVendor, setVendorName, setVendorToDefault, error } = vendorSlice.actions;
 
 export default vendorSlice.reducer;

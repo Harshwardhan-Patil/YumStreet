@@ -91,8 +91,11 @@ class Helper {
   }
 
   static GetAverageRating(Reviews) {
+    if (!Reviews) {
+      return 0;
+    }
     let averageRating = 0.0;
-    if (Reviews.length > 0) {
+    if (Reviews?.length > 0) {
       const totalRating = Reviews.reduce((total, review) => {
         return total + review.rating;
       }, 0);

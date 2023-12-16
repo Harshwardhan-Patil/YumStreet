@@ -1,6 +1,6 @@
 import backgroundImage from '@/assets/Temp/partner-with-us.webp';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChooseLocation, ChooseFood, Delivery } from '@/assets/illustration';
+import { Cooking, LandingPage, OrderDelivered } from '@/assets/illustration';
 import WorkingGuide, { IllustrationAndInfo } from '@/components/common/WorkingGuide';
 import Footer from '@/components/Layout/Footer';
 import { YumStreet, route } from '@/constants';
@@ -106,19 +106,19 @@ function HowItWorks() {
             subInfo={"Explore following these steps will help you to partner with us easily"}
         >
             <IllustrationAndInfo
-                SVGIllustration={<ChooseLocation className={'w-full h-fit object-cover'} />}
-                title={"Choose Location"}
-                description={"Enter you address or choose your current location"}
+                SVGIllustration={<LandingPage className={'w-full h-fit object-cover'} />}
+                title={"Create your page"}
+                description={"Help users discover your place by creating a listing on Yumstreet"}
             />
             <IllustrationAndInfo
-                SVGIllustration={<ChooseFood className={'w-full h-fit object-cover'} />}
-                title={"Order Favorite Food"}
-                description={"Choose your favorite food and payment method"}
+                SVGIllustration={<Cooking className={'w-[80%] h-fit object-cover'} />}
+                title={"Add and create menu items"}
+                description={"Easily add and showcase your dishes. Entice customers with a mouthwatering menu!"}
             />
             <IllustrationAndInfo
-                SVGIllustration={<Delivery className={'w-full h-fit object-cover'} />}
-                title={"Fast Delivery"}
-                description={"Get it delivered to your location"}
+                SVGIllustration={<OrderDelivered className={'w-full h-fit object-cover'} />}
+                title={"Start receiving orders online"}
+                description={"Manage orders on our dashboard"}
             />
         </WorkingGuide>
     )

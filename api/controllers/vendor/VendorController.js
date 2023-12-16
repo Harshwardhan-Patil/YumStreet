@@ -60,8 +60,8 @@ class VendorController {
       );
 
       const city =
-        locationInfo?.results[0].components.city ||
-        locationInfo?.results[0].components.state_district;
+        locationInfo?.results[0].components.city.toLowerCase() ||
+        locationInfo?.results[0].components.state_district.toLowerCase();
 
       const paginatedVendors = await this.vendorDb.FindAll(
         {
@@ -81,6 +81,7 @@ class VendorController {
 
       const paginatedVendorData =
         await FilterController.ByPopularity(paginatedVendors);
+
       if (!paginatedVendorData) {
         throw new ApiError(STATUS_CODES.NOT_FOUND, 'No vendors found');
       }

@@ -26,7 +26,7 @@ function WorkingGuide({ children, subInfo }) {
 export function IllustrationAndInfo({ SVGIllustration, title, description }) {
     return (
         <div className='w-[250px] max-w-[300px] shadow-md flex justify-center px-4 min-h-[20rem] rounded-sm items-center flex-col bg-white'>
-            <div className='w-44 h-44 flex items-center'>
+            <div className='w-44 h-44 flex items-center justify-center'>
                 {SVGIllustration}
             </div>
             <div className='text-center mt-6'>

@@ -1,13 +1,11 @@
 import { cn } from "@/lib/utils"
 import { Field, ErrorMessage } from "formik"
-import { useRef } from "react"
 
 function CustomInput({ title, name, type, className }) {
-    const ref = useRef(null);
     return (
         <div className="mb-4">
             <label htmlFor={name} className='font-medium'>{title}</label>
-            <Field ref={ref} onFocus={() => ref.current.click()} id={name} name={name} type={type} className={cn(`${input}`, className)} />
+            <Field id={name} name={name} type={type} className={cn(`${input}`, className)} />
             <ErrorMessage name={name}>{(msg) => <p className="text-destructive text-sm">{msg}</p>}</ErrorMessage>
         </div>
     )

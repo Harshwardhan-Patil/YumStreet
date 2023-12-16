@@ -151,7 +151,7 @@ const OrderCard = forwardRef(({ order, status, btn, title, description }, ref) =
         <Card ref={ref} className={"max-w-xs mt-2"} >
             <CardHeader>
                 <CardTitle className='text-xl'>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between gap-3">
                         <div>
                             <h3 className="capitalize font-semibold text-lg">{`${order?.User.firstname} ${order?.User.lastname}`}</h3>
                             <p className="capitalize font-medium text-primary-gray text-sm">{formatDate(order?.orderDate)}</p>
@@ -198,7 +198,7 @@ const OrderCard = forwardRef(({ order, status, btn, title, description }, ref) =
                 <span>{order.OrderItems.length > 2 ? `+${order.OrderItems.length - 1} items` : ''}</span>
             </CardContent>
             <CardFooter>
-                <div className="w-full flex justify-between items-center mt-4">
+                <div className="w-full flex justify-between gap-3 items-center mt-4">
                     <span className="font-semibold">
                         Total: {CURRENCY_INR} {order.totalPrice}
                     </span>
